@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LMS · Indicadores de gestión logística</title>
+<style>
+:root{--bg:#f4f6fa;--c:#fff;--t:#1b2433;--m:#5b6678;--p:#0b4f8a;--ok:#1a7f4b;--no:#b3261e;--b:#d9dfe9}
+@media(prefers-color-scheme:dark){:root{--bg:#10151e;--c:#182030;--t:#e8edf5;--m:#9aa6ba;--p:#6fb1f2;--ok:#4cc08a;--no:#ff8a80;--b:#2a3550}}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--t)}
+header{background:var(--p);color:#fff;padding:12px 18px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+header h1{font-size:18px;margin:0}header .st{font-size:14px}
+#app{display:flex;gap:18px;max-width:1100px;margin:18px auto;padding:0 14px}
+nav{width:250px;flex:none}main{flex:1;min-width:0;background:var(--c);border:1px solid var(--b);border-radius:10px;padding:22px}
+.u{display:block;width:100%;text-align:left;background:var(--c);color:var(--t);border:1px solid var(--b);border-radius:8px;padding:10px;margin-bottom:8px;cursor:pointer;font:inherit;font-size:14px}
+.u.on{border-color:var(--p);box-shadow:0 0 0 2px var(--p) inset}.u:disabled{opacity:.5;cursor:not-allowed}
+.u small{display:block;color:var(--m)}
+h2{margin-top:0}h3{color:var(--p)}.ex{background:var(--bg);border-left:4px solid var(--p);padding:10px 14px;border-radius:6px;margin:12px 0}
+.f{font-family:ui-monospace,Consolas,monospace;background:var(--bg);padding:2px 6px;border-radius:4px}
+button.b{background:var(--p);color:#fff;border:0;border-radius:8px;padding:10px 18px;font:inherit;cursor:pointer;margin:4px 6px 4px 0}
+button.b.g{background:var(--m)}input[type=text]{padding:8px;border:1px solid var(--b);border-radius:6px;background:var(--c);color:var(--t);width:260px;max-width:100%}
+#ov{position:fixed;inset:0;background:rgba(8,12,20,.96);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}
+#box{background:var(--c);border-radius:12px;max-width:680px;width:100%;max-height:92vh;overflow:auto;padding:22px}
+.q{margin:16px 0}.o{display:block;padding:9px 12px;border:1px solid var(--b);border-radius:8px;margin:6px 0;cursor:pointer}
+.o:has(input:checked){border-color:var(--p);background:var(--bg)}.w{background:#fff3cd;color:#664d03;padding:10px;border-radius:8px;margin:10px 0}
+.good{color:var(--ok)}.bad{color:var(--no)}.bar{height:8px;background:var(--b);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok)}
+@media(max-width:760px){#app{flex-direction:column}nav{width:100%}}
+</style></head><body>
+<header><h1>Indicadores de gestión logística · LMS</h1><div class="st" id="hd"></div></header>
+<div id="app"><nav id="nv"></nav><main id="mn"></main></div>
+<div id="ov"><div id="box"></div></div>
+<style>details.fq{background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:8px 12px;margin:12px 0}details.fq summary{cursor:pointer;font-weight:600;color:var(--p)}table.t{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0;display:block;overflow-x:auto}table.t td,table.t th{border:1px solid var(--b);padding:6px 8px;text-align:left;vertical-align:top}table.t th{background:var(--bg)}.ref{font-size:13px;color:var(--m)}</style>
+<script>window.EXT={}</script>
+<script>
+EXT[1]={h:`<h2>Unidad 1. Clasificación de los indicadores de gestión a partir de los estados contables</h2>
+<p><b>Objetivo:</b> separar los costos logísticos reales de los gastos generales, medirlos con criterios reproducibles y calcular el costo logístico sobre ventas, entendiendo qué significa (y qué no) hablar de utilidad atribuible a la logística.</p>
+
+<h3>1.1 Introducción: por qué la logística necesita a la contabilidad</h3>
+<p>La logística consume dinero y, a la vez, protege ingresos: mantiene producto disponible, cumple plazos y evita pérdidas. El problema es que la contabilidad tradicional no muestra «el costo logístico» como una sola cifra. El flete puede estar en costo de ventas o en gastos de distribución; el coordinador de bodega, en nómina administrativa; el arriendo del centro de distribución, en servicios generales. En una distribuidora de Urabá que mueve abarrotes o banano hacia Medellín o Cartagena, el transporte es visible, pero el almacenamiento, los inventarios y las devoluciones suelen quedar dispersos.</p>
+<p><b>Principio de la unidad:</b> un indicador logístico es tan confiable como la clasificación de costos que lo alimenta. Si se mezclan gastos ajenos a la operación, la conclusión gerencial será equivocada aunque la fórmula sea correcta.</p>
+
+<h3>1.2 Conceptos fundamentales</h3>
+<table class="t"><tr><th>Concepto</th><th>Significado</th><th>Ejemplo</th></tr>
+<tr><td>Dato</td><td>Valor registrado de una transacción</td><td>1.200 pedidos despachados</td></tr>
+<tr><td>Indicador</td><td>Medida calculada que se compara con una referencia</td><td>96 % de pedidos despachados a tiempo</td></tr>
+<tr><td>Meta</td><td>Resultado esperado</td><td>OTD ≥ 98 %</td></tr>
+<tr><td>Brecha</td><td>Diferencia entre resultado y meta</td><td>96 % − 98 % = −2 puntos</td></tr>
+<tr><td>Costo logístico</td><td>Recursos consumidos en actividades logísticas dentro del alcance definido</td><td>Fletes, bodega, empaque, personal del CD</td></tr>
+<tr><td>Gasto general</td><td>Recurso no exclusivo de la operación logística</td><td>Publicidad, honorarios jurídicos corporativos</td></tr>
+<tr><td>Desembolso</td><td>Salida efectiva de dinero</td><td>Pago al proveedor de combustible</td></tr>
+<tr><td>Inversión</td><td>Recursos para adquirir o mejorar activos</td><td>Compra de un montacargas</td></tr></table>
+<p>Un dato aislado describe; un indicador permite evaluar. Decir «gastamos $80 millones en transporte» es un dato; decir que equivalen al 8 % de las ventas es un indicador, y aun así no demuestra eficiencia: hay que mirar tipo de mercancía, distancias, volúmenes y nivel de servicio.</p>
+<details class="fq"><summary>Comprueba: ¿la compra de un montacargas de $120 millones es costo logístico de ese mes?</summary>No. Es una inversión en activos. Para el análisis mensual se considera su depreciación, mantenimiento, energía y seguros. Confundir inversión con costo del período dispara el indicador en un solo mes y lleva a decisiones erradas.</details>
+
+<h3>1.3 Los estados financieros vistos desde la logística</h3>
+<p>En Colombia, cada entidad aplica el marco técnico normativo de información financiera que le corresponde, compilado en el Decreto 2420 de 2015 y sus modificaciones. El análisis logístico parte de esa información y la complementa con registros internos por proceso.</p>
+<table class="t"><tr><th>Estado</th><th>Qué aporta a la logística</th><th>Cuidado</th></tr>
+<tr><td>Estado del resultado integral</td><td>Ingresos, costo de ventas, gastos de distribución, personal, arriendos, deterioros de inventario</td><td>Las partidas logísticas vienen agrupadas; hay que abrir notas y auxiliares</td></tr>
+<tr><td>Estado de situación financiera</td><td>Inventarios, equipos, vehículos, cuentas por pagar a transportadores, cuentas por cobrar</td><td>El valor de un activo no es costo del período</td></tr>
+<tr><td>Estado de flujos de efectivo</td><td>Cómo las decisiones operativas afectan el efectivo (por ejemplo, más inventario inmoviliza capital)</td><td>Costo reconocido, desembolso e inversión no son intercambiables</td></tr></table>
+<p><b>Ejemplo:</b> ventas por $1.000 millones; transporte $65 M, salarios del CD $30 M y arriendo de bodega $15 M suman $110 M identificados. No es el costo logístico total: aún pueden faltar costos de inventario, sistemas, seguros, equipos y devoluciones.</p>
+
+<h3>1.4 Costo logístico, gasto general y costo del producto</h3>
+<p><b>Costo del producto:</b> parte del costo de adquisición o producción que se reconoce en inventario o en costo de ventas. Algunos fletes de entrada pueden formar parte del costo del inventario; los de entrega al cliente suelen tratarse distinto. De allí la regla de control: <i>un costo puede ser logístico en lo económico sin figurar en una cuenta llamada «costos logísticos»</i>.</p>
+<p><b>No clasifique por el nombre de la cuenta.</b> El salario de una persona de recursos humanos es administrativo, pero si dedica parte de su tiempo exclusivamente al personal del CD, una porción puede asignarse a logística con un criterio razonable y verificable (por ejemplo, horas dedicadas).</p>
+<details class="fq"><summary>Comprueba: una empresa define que su indicador excluye devoluciones y costo financiero del inventario. ¿Es válido?</summary>Sí, siempre que el alcance quede definido y documentado y se aplique de forma consistente en todos los períodos. Lo inválido es cambiar el alcance sin avisar, porque rompe la comparabilidad.</details>
+
+<h3>1.5 Cuatro formas de clasificar los costos logísticos</h3>
+<table class="t"><tr><th>Criterio</th><th>Categorías</th><th>Para qué sirve</th></tr>
+<tr><td>Por proceso</td><td>Aprovisionamiento, almacenamiento, inventarios, preparación de pedidos, transporte y distribución, devoluciones, gestión logística</td><td>Saber dónde se consumen los recursos</td></tr>
+<tr><td>Por trazabilidad</td><td>Directo (identificable con un pedido, ruta o proceso) / indirecto (requiere un criterio de asignación)</td><td>Decidir si se asigna o se distribuye</td></tr>
+<tr><td>Por comportamiento</td><td>Fijo (arriendo con canon fijo), variable (empaque por pedido), mixto (tarifa base + cobro por unidad)</td><td>Presupuestar y estimar el efecto de cambios de volumen</td></tr>
+<tr><td>Por controlabilidad</td><td>Controlable / no controlable en el corto plazo</td><td>Asignar responsabilidades realistas</td></tr></table>
+<p><b>Dos confusiones frecuentes:</b> un costo indirecto no es necesariamente un gasto general (el arriendo de una bodega compartida es logístico e indirecto); y un costo fijo no es lo mismo que uno no controlable (el canon no se cambia este mes, pero puede renegociarse al vencer el contrato).</p>
+<details class="fq"><summary>Comprueba: clasifica el combustible de un camión dedicado a entregas.</summary>Proceso: transporte y distribución. Trazabilidad: directo si se asocia a la ruta o vehículo. Comportamiento: variable (depende de kilómetros). Controlabilidad: parcialmente controlable (rutas, conducción), no así el precio del combustible.</details>
+
+<h3>1.6 Procedimiento para identificar los costos logísticos reales</h3>
+<table class="t"><tr><th>Etapa</th><th>Qué hacer</th><th>Orientación práctica</th></tr>
+<tr><td>1. Alcance</td><td>Definir qué actividades se consideran logísticas</td><td>Decida si incluye logística inversa, costo financiero del inventario y servicios tercerizados</td></tr>
+<tr><td>2. Período</td><td>Mismo período para costos y ventas</td><td>No divida costos de enero a junio entre ventas de enero a marzo</td></tr>
+<tr><td>3. Registros</td><td>Revisar auxiliares, comprobantes, facturas y centros de costo</td><td>Si una cuenta mezcla conceptos, abra su detalle</td></tr>
+<tr><td>4. Proceso</td><td>Asociar cada transacción al proceso que la originó</td><td>Combustible a distribución; equipos de manipulación a almacenamiento</td></tr>
+<tr><td>5. Directos e indirectos</td><td>Asignar los directos; distribuir los indirectos con inductores</td><td>m², horas de equipo, pedidos, movimientos, kilómetros u horas de trabajo según la causa del costo</td></tr>
+<tr><td>6. Doble contabilización</td><td>Incluir cada transacción una sola vez</td><td>El flete de entrada ya sumado al costo del inventario no se vuelve a sumar</td></tr>
+<tr><td>7. Conciliación</td><td>Contrastar con la contabilidad y explicar diferencias</td><td>Documente estimaciones y su incertidumbre</td></tr>
+<tr><td>8. Ficha técnica</td><td>Registrar fórmula, fuente, responsable, frecuencia, unidad y meta</td><td>Permite repetir y auditar el cálculo</td></tr></table>
+<p>Repartir todos los indirectos por ventas es cómodo, pero distorsiona cuando los productos consumen recursos logísticos muy distintos (un producto voluminoso y barato ocupa mucha bodega y vende poco).</p>
+
+<h3>1.7 Caso resuelto: Distribuciones del Urabá S. A. S.</h3>
+<p>Ventas netas de septiembre: $1.000.000.000. Registros: costo de adquisición de mercancías vendidas $600 M; transporte de distribución $65 M; personal del CD $30 M; arriendo de bodega $15 M; materiales de empaque $8 M; publicidad $12 M; honorarios jurídicos corporativos $5 M; salarios de administración general $20 M.</p>
+<p><b>Análisis:</b> son logísticas transporte, personal del CD, bodega y empaque. Se excluyen publicidad, honorarios y administración general porque no se ha demostrado relación con la operación. El costo de adquisición no se suma automáticamente: puede contener fletes de entrada y habría que examinar su composición para no duplicar ni omitir.</p>
+<p><span class="f">CL = 65 + 30 + 15 + 8 = $118 M</span></p>
+<p><span class="f">CLV (%) = Costos logísticos / Ventas netas × 100 = 118 / 1.000 × 100 = 11,8 %</span></p>
+<p><b>Interpretación:</b> por cada $100 vendidos hay $11,80 de costo logístico identificado bajo el alcance definido. No es el costo total definitivo mientras haya partidas por identificar. Para juzgar si es alto hay que compararlo con períodos anteriores, empresas comparables y niveles de servicio equivalentes. Si baja de 11,8 % a 10,5 % podría ser mejora, o podría ser recorte a costa de entregas tardías y devoluciones; por eso se lee junto con tiempo y calidad (Unidades 4, 5 y 7).</p>
+
+<h3>1.8 ¿Qué es la «utilidad atribuible a la logística»?</h3>
+<p>No es una partida contable normalizada: es una medida de gestión que debe definirse según el objetivo. Una venta depende del producto, el precio, la publicidad, la gestión comercial y la disponibilidad logística; atribuir a logística todo el margen sería incorrecto.</p>
+<ul><li><b>Método 1, resultado por costos:</b> R = Ingresos − Costos − Gastos. Mide el resultado del alcance definido, pero incluye otras funciones; no debe llamarse utilidad logística sin más.</li>
+<li><b>Método 2, contribución de una mejora:</b> Bn = ahorro − costo adicional. Un rediseño de rutas ahorra $12 M mensuales y exige $3 M en tecnología y planificación: <span class="f">Bn = 12 − 3 = $9 M</span>, siempre que ahorros y costos sean verificables y del mismo período.</li>
+<li><b>Método 3, margen de contribución por pedido, cliente o canal:</b> MC = Ventas asignadas − Costos variables asignados, descontando luego costos logísticos específicos sin duplicar. Revela clientes con muchos despachos, devoluciones o requisitos especiales.</li></ul>
+<p>Antes de usar el término hay que declarar qué ingresos y costos se atribuyen, cómo se reparten los recursos compartidos y qué queda fuera. Una cifra sin esa metodología aparenta precisión que no tiene.</p>
+<details class="fq"><summary>Comprueba: ¿puede un gerente afirmar «la logística generó $200 M de utilidad» con solo restar costos logísticos de las ventas?</summary>No. Esa diferencia también refleja precio, producto y gestión comercial. Necesita un método de atribución explícito (por ejemplo, ahorros verificables o margen de contribución por cliente) y debe declarar qué excluye.</details>
+
+<h3>1.9 Errores frecuentes</h3>
+<table class="t"><tr><th>Error</th><th>Causa</th><th>Cómo evitarlo</th></tr>
+<tr><td>Todo gasto es logístico</td><td>Clasificar por cercanía percibida</td><td>Asociar cada partida a un proceso definido</td></tr>
+<tr><td>Solo el transporte cuenta</td><td>Es el costo más visible</td><td>Usar la clasificación integral por procesos</td></tr>
+<tr><td>Sumar una factura dos veces</td><td>Aparece en reportes distintos</td><td>Conciliar fuentes y controlar duplicados</td></tr>
+<tr><td>Costos de un período contra ventas de otro</td><td>Cortes distintos entre áreas</td><td>Fijar un período común</td></tr>
+<tr><td>Indirectos repartidos por igual o solo por ventas</td><td>Facilidad de cálculo</td><td>Elegir inductores ligados al consumo del recurso</td></tr>
+<tr><td>Menor costo siempre es mejor</td><td>Mirar el indicador aislado</td><td>Leerlo junto con tiempo, calidad y seguridad</td></tr></table>
+
+<h3>1.10 Actividad de aplicación</h3>
+<p>Una empresa tiene ventas netas de $750 M; transporte $42 M; operación de bodega $18 M; empaque $6 M; publicidad $9 M; gastos jurídicos corporativos $4 M. (1) Clasifique las partidas. (2) Calcule los costos logísticos. (3) Calcule el CLV. (4) Interprételo. (5) Señale dos partidas que requerirían revisión antes de afirmar que es el costo total. (6) Proponga una mejora y el indicador que verifica que no deteriora el servicio.</p>
+<details class="fq"><summary>Ver solución orientativa</summary>CL = 42 + 18 + 6 = $66 M. CLV = 66/750 × 100 = 8,8 %: $8,80 de costo logístico identificado por cada $100 vendidos; no se puede decir si es óptimo sin referentes. Por revisar: fletes de entrada incluidos en el costo de adquisición, costo de mantener inventario y tiempo administrativo dedicado parcialmente a logística. Mejora posible: consolidar despachos; verificar con OTD y OTIF.</details>
+
+<h3>1.11 Síntesis: lo que debes dominar antes de avanzar</h3>
+<ul><li>Diferenciar costo logístico, gasto general, desembolso e inversión.</li><li>Explicar qué aporta cada estado financiero al análisis logístico.</li><li>Clasificar costos por proceso, trazabilidad, comportamiento y controlabilidad.</li><li>Aplicar el procedimiento de 8 etapas y evitar la doble contabilización.</li><li>Calcular e interpretar el CLV con sus límites.</li><li>Reconocer por qué la utilidad atribuible a la logística exige metodología.</li></ul>
+
+<h3>1.12 Glosario</h3>
+<p><b>Alcance:</b> conjunto de actividades y costos incluidos en el indicador. <b>Auxiliar contable:</b> detalle de las transacciones de una cuenta. <b>Inductor de costo:</b> variable que explica por qué se consume un recurso (m², horas, pedidos). <b>Conciliación:</b> contraste entre dos fuentes para explicar diferencias. <b>CLV:</b> costos logísticos sobre ventas.</p>
+
+<h3>Referencias y nota de fuentes</h3>
+<p class="ref"><b>Fuentes normativas:</b> Decreto 2420 de 2015 y sus modificaciones (marco técnico de información financiera en Colombia); NIC 1, Presentación de Estados Financieros. <b>Literatura de consulta sugerida para profundizar</b> en costos y gestión logística: Bowersox, Closs y Cooper, <i>Supply Chain Logistics Management</i>; Ballou, <i>Logística: administración de la cadena de suministro</i>. <b>Aclaración:</b> las definiciones de «costo logístico sobre ventas», los pasos de identificación de costos y los tres métodos de atribución son una <b>síntesis pedagógica</b> de este curso, no citas textuales de esas obras. Verifica edición y páginas antes de citarlas en documentos académicos.</p>`,
+q:[
+["Una empresa suma otra vez una factura de transporte que ya está dentro del costo de adquisición. ¿Cuál es el principal riesgo?",["Duplicar costos y sobrestimar el indicador logístico","Subestimar las ventas netas","Reducir el tiempo de entrega","Aumentar automáticamente la utilidad"],0,"La doble contabilización infla el costo y distorsiona el indicador."],
+["La compra de un montacargas de $120 M, ¿cómo debe tratarse en el análisis mensual?",["Como inversión; se analiza su depreciación, mantenimiento y operación","Como costo logístico íntegro de ese mes","Como gasto general","Se ignora"],0,"Inversión y costo del período no son lo mismo."],
+["Ventas $750 M; transporte $42 M, bodega $18 M, empaque $6 M, publicidad $9 M, jurídicos $4 M. ¿CLV?",["8,8 %","10 %","11,2 %","14,4 %"],0,"(42+18+6)/750 × 100 = 8,8 %; publicidad y jurídicos se excluyen."],
+["Una bodega compartida se reparte solo por ventas de cada línea. ¿Qué debe verificarse?",["Que la base refleje el consumo de recursos de cada línea","Que todas las líneas tengan igual precio","Que se reparta por partes iguales","Que se registre como gasto administrativo"],0,"El inductor debe guardar relación con la causa del costo."],
+["El arriendo de una bodega con canon fijo, usada por varias líneas, se clasifica como:",["Costo logístico indirecto y fijo","Gasto general variable","Costo directo y variable","Inversión en activos"],0,"Es logístico, requiere distribución entre líneas y no cambia con el volumen."],
+["¿Por qué no se divide el costo logístico de enero a junio entre las ventas de enero a marzo?",["Porque los períodos no son comparables y el resultado no representa la realidad","Porque las ventas no se pueden dividir","Porque es ilegal","Porque el resultado siempre sería 100 %"],0,"Costos y ventas deben corresponder al mismo período."],
+["El CLV baja de 12 % a 10 %. ¿Qué se concluye únicamente con ese dato?",["La proporción de costos sobre ventas disminuyó","La rentabilidad mejoró necesariamente","El costo absoluto bajó necesariamente","El servicio mejoró"],0,"Es una relación; el costo absoluto, la rentabilidad y el servicio requieren más información."],
+["Un rediseño de rutas ahorra $12 M mensuales y cuesta $3 M mensuales adicionales. ¿Beneficio neto estimado?",["$9 M","$15 M","$12 M","$3 M"],0,"12 − 3 = $9 M, si ahorros y costos son verificables y del mismo período."]
+]};
+
+EXT[2]={h:`<h2>Unidad 2. Matriz logística de los indicadores de gestión</h2>
+<p><b>Objetivo:</b> construir el mapa de control que cruza procesos con KPI, metas, responsables y acciones, y usarlo para detectar brechas operativas y hacer benchmarking válido.</p>
+
+<h3>2.1 Introducción: de medir a gestionar</h3>
+<p>Una empresa puede calcular decenas de indicadores y aun así administrar mal si no sabe cuáles son prioritarios, quién responde por cada desviación y qué se hace cuando aparece. La <b>matriz logística</b> organiza los KPI (<i>Key Performance Indicators</i>) por proceso y los conecta con objetivos, metas, fuentes, responsables y acciones. Convierte datos dispersos en un sistema de control.</p>
+<p><b>Ejemplo:</b> una distribuidora registra 2.000 pedidos entregados, 1.840 a tiempo y 1.900 completos. Esos datos sirven, pero solo se vuelven gestión cuando la matriz dice que el responsable de distribución debe llevar el cumplimiento a 98 %, que se revisa cada semana y qué se investiga si falla.</p>
+
+<h3>2.2 Lista, ficha técnica y matriz de control</h3>
+<table class="t"><tr><th>Herramienta</th><th>Función</th><th>Contenido</th></tr>
+<tr><td>Lista de indicadores</td><td>Identificar qué se medirá</td><td>Nombre, proceso, objetivo</td></tr>
+<tr><td>Ficha técnica</td><td>Definir cómo se calcula, para que todos lo hagan igual</td><td>Fórmula, variables, unidad, fuente, periodicidad, reglas de interpretación</td></tr>
+<tr><td>Matriz de control</td><td>Usar los resultados para dirigir la operación</td><td>Metas, resultado, brecha, responsable, acción correctiva</td></tr></table>
+<details class="fq"><summary>Comprueba: dos analistas calculan el «OTD» y obtienen cifras distintas con los mismos datos. ¿Qué herramienta falló?</summary>La ficha técnica: no fijó con precisión numerador, denominador, evento de entrega y reglas de inclusión. La matriz depende de que la ficha elimine esa ambigüedad.</details>
+
+<h3>2.3 Estrategia, procesos e indicadores</h3>
+<p>La cadena lógica es: objetivo estratégico → objetivo logístico → proceso responsable → indicador → meta y resultado real → ¿se cumple? Si sí, se mantiene y verifica; si no, se analiza la causa, se define la acción correctiva y se mide de nuevo.</p>
+<p><b>Ejemplo:</b> estratégico, retener clientes; logístico, entregar completo y en plazo; proceso, preparación y distribución; indicador, OTIF; meta ilustrativa, ≥ 97 %; reacción, investigar faltantes, retrasos, errores de preparación y fallas de transporte. Esta cadena evita elegir indicadores solo porque son fáciles de calcular.</p>
+
+<h3>2.4 Clasificación de los indicadores en la matriz</h3>
+<table class="t"><tr><th>Tipo</th><th>Mide</th><th>Ejemplos</th></tr>
+<tr><td>Financieros</td><td>Consumo de recursos económicos</td><td>Costo logístico sobre ventas, costo por pedido, costo por tonelada</td></tr>
+<tr><td>Tiempo</td><td>Duración y cumplimiento de plazos</td><td>Lead Time, tiempo de recepción, OTD</td></tr>
+<tr><td>Calidad</td><td>Conformidad con requisitos</td><td>Exactitud del inventario, pedidos sin errores, tasa de daños</td></tr>
+<tr><td>Productividad</td><td>Resultados frente a recursos</td><td>Pedidos por hora-hombre, movimientos por hora de equipo</td></tr>
+<tr><td>Integrales de servicio</td><td>Lo que recibe el cliente</td><td>OTD, OTIF, Pedido Perfecto</td></tr></table>
+<p>Un mismo proceso necesita indicadores de varias categorías: reducir el costo de distribución no basta si se entrega tarde o incompleto.</p>
+
+<h3>2.5 Estructura de la matriz</h3>
+<table class="t"><tr><th>Campo</th><th>Qué debe especificar</th><th>Orientación práctica</th></tr>
+<tr><td>Proceso y objetivo</td><td>Actividad evaluada y resultado buscado</td><td>Un objetivo por indicador prioritario</td></tr>
+<tr><td>Indicador, definición, fórmula, unidad</td><td>Qué mide, qué incluye y cómo se calcula</td><td>Enlace a la ficha técnica</td></tr>
+<tr><td>Meta, resultado, brecha</td><td>Esperado, observado y diferencia</td><td>Indique si mayor o menor es mejor</td></tr>
+<tr><td>Frecuencia y fuente</td><td>Cada cuánto y de qué sistema</td><td>Solo fuentes que pueda verificar</td></tr>
+<tr><td>Responsable y acción</td><td>Quién gestiona y qué se hace ante una desviación</td><td>Quien responde debe tener autoridad sobre el resultado</td></tr></table>
+<p>Es preferible empezar con pocos indicadores confiables que con una tabla extensa que nadie puede verificar.</p>
+
+<h3>2.6 Procedimiento de construcción</h3>
+<ol><li><b>Procesos:</b> abastecimiento, almacenamiento, inventarios, preparación, transporte, distribución y devoluciones.</li><li><b>Objetivos</b> por proceso (por ejemplo, almacenamiento: preservar mercancía, exactitud, uso del espacio).</li><li><b>Indicadores</b> que midan directamente el resultado a controlar; descartar los que no conduzcan a decisiones.</li><li><b>Fichas técnicas</b> con numerador, denominador, período, unidad y reglas de inclusión.</li><li><b>Metas</b> según capacidad, necesidades del cliente, histórico, restricciones y referentes.</li><li><b>Responsabilidades:</b> distinguir quien produce el dato, quien lo valida, quien analiza causas y quien puede implementar mejoras.</li><li><b>Frecuencia:</b> el sistema puede registrar a diario, informar cada semana y revisar tendencias cada mes.</li><li><b>Mecanismo de reacción:</b> revisión inmediata, análisis de causas, reunión de seguimiento o plan de mejora.</li><li><b>Validación</b> de fórmulas, fuentes, metas y responsables antes de evaluar con ella.</li></ol>
+
+<h3>2.7 Caso resuelto: matriz de Distribuciones del Urabá</h3>
+<table class="t"><tr><th>Proceso</th><th>Indicador</th><th>Meta ilustrativa</th><th>Real</th><th>Lectura</th></tr>
+<tr><td>Transporte</td><td>OTD</td><td>≥ 98 %</td><td>94 %</td><td>Incumple</td></tr>
+<tr><td>Inventarios</td><td>Exactitud</td><td>≥ 99 %</td><td>96,5 %</td><td>Diferencias por investigar</td></tr>
+<tr><td>Preparación</td><td>Pedidos sin errores</td><td>≥ 99 %</td><td>97 %</td><td>Errores de alistamiento o verificación</td></tr>
+<tr><td>Distribución</td><td>CLV</td><td>≤ 10 %</td><td>11,2 %</td><td>Supera el límite</td></tr></table>
+<p>La matriz señala <i>dónde</i> hay desviación, no <i>por qué</i>. El OTD bajo puede deberse a retrasos de alistamiento, falta de vehículos, congestión, direcciones erradas o promesas comerciales poco realistas; hay que investigar antes de actuar.</p>
+<p><b>Brecha absoluta:</b> <span class="f">B = 94 % − 98 % = −4 puntos porcentuales</span>. <b>Brecha relativa:</b> <span class="f">D = (98 − 94) / 98 × 100 ≈ 4,08 %</span>. Son medidas distintas: la primera es distancia en puntos; la segunda, esa distancia como proporción de la meta. Declara cuál usas.</p>
+
+<h3>2.8 Semaforización</h3>
+<p>Verde: se alcanza o supera la meta. Amarillo: desviación moderada que pide seguimiento. Rojo: desviación sobre la tolerancia, que exige intervención. En indicadores donde menor es mejor (costo por pedido) la lógica se invierte. Los umbrales se definen por indicador: no sirve la misma regla para OTD, costo y tasa de daños. Un indicador en verde con tendencia negativa justifica actuar de forma preventiva.</p>
+
+<h3>2.9 Benchmarking y análisis de brechas</h3>
+<p><b>Benchmarking:</b> comparación sistemática para identificar diferencias de desempeño, entender las prácticas que las explican y adaptarlas. Modalidades: <i>interno</i> (entre CD, períodos o rutas de la misma empresa), <i>competitivo</i> (con competidores, si la información es legítima y comparable) y <i>funcional</i> (con organizaciones de otros sectores que hacen procesos similares). Solo es válido si coinciden definiciones, período, unidad, tipo de operación y nivel de servicio: comparar 500 pedidos urbanos pequeños con cargas consolidadas de varias toneladas genera conclusiones engañosas.</p>
+<p><b>Análisis de brechas:</b> confirmar comparabilidad → cuantificar → ubicar el proceso donde se origina → investigar causas → priorizar por impacto → medir de nuevo.</p>
+<details class="fq"><summary>Comprueba: el CD de Apartadó tiene costo por pedido de $14.000 y el de otra ciudad $11.000. ¿Hay una brecha de $3.000?</summary>No necesariamente. Primero verifica que midan lo mismo (alcance de costos, tipo de pedido, distancia, nivel de servicio). Si no son comparables, la «brecha» es un artefacto de la medición.</details>
+
+<h3>2.10 Errores frecuentes</h3>
+<table class="t"><tr><th>Error</th><th>Consecuencia</th><th>Prevención</th></tr>
+<tr><td>KPI sin objetivo</td><td>Informes que no orientan decisiones</td><td>Vincular cada KPI con un objetivo explícito</td></tr>
+<tr><td>Cambiar fórmulas sin registro</td><td>Se pierde la comparabilidad histórica</td><td>Controlar versiones de las fichas</td></tr>
+<tr><td>Comparar operaciones distintas</td><td>Brechas artificiales</td><td>Homologar definiciones y condiciones</td></tr>
+<tr><td>Responsable sin autoridad</td><td>Desviaciones sin corrección</td><td>Separar responsabilidad operativa y factores externos</td></tr>
+<tr><td>Solo indicadores de costo</td><td>Deterioro del servicio</td><td>Combinar costo, tiempo, calidad y productividad</td></tr>
+<tr><td>Misma semaforización para todo</td><td>Lecturas erradas</td><td>Umbrales por indicador</td></tr></table>
+
+<h3>2.11 Actividad de aplicación</h3>
+<p>Datos: exactitud 97 % (meta 99 %); OTD 96 % (meta 98 %); costo por pedido $18.000 (límite $16.000); productividad 24 pedidos/HH (meta 28). (1) Organícelos en una matriz. (2) Calcule las brechas. (3) Clasifique cada indicador. (4) Proponga responsable y fuente. (5) Plantee una hipótesis de causa por desviación. (6) Formule una mejora y el indicador que verifica sus efectos.</p>
+<details class="fq"><summary>Ver solución orientativa</summary>Brechas: exactitud −2 puntos; OTD −2 puntos; costo +$2.000 sobre el límite; productividad −4 pedidos/HH. Tipos: calidad, tiempo, financiero, productividad. Una productividad baja puede venir de recorridos excesivos, ubicaciones inadecuadas, faltantes o pedidos más complejos: son hipótesis hasta comprobarlas con datos.</details>
+
+<h3>2.12 Síntesis y glosario</h3>
+<p>Debes poder construir una matriz que relacione procesos, objetivos, fórmulas, metas, fuentes, responsables y acciones; interpretar brechas; diseñar reglas de seguimiento; y explicar por qué una comparación solo es válida con mediciones consistentes.</p>
+<p><b>KPI:</b> indicador clave de desempeño. <b>Brecha:</b> diferencia entre resultado y meta o referente. <b>Semaforización:</b> código de colores por umbrales. <b>Benchmarking:</b> comparación sistemática con referentes. <b>Línea base:</b> valor inicial contra el cual se mide la mejora.</p>
+<p class="ref"><b>Lectura sugerida:</b> Kaplan y Norton, «The Balanced Scorecard: Measures That Drive Performance», <i>Harvard Business Review</i> (1992), sobre medición ligada a estrategia; el modelo SCOR de la ASCM (antes APICS) como referente de métricas por proceso. <b>Aclaración:</b> la estructura de campos, el procedimiento de 9 etapas, la distinción entre brecha absoluta y relativa y los esquemas de semaforización son una <b>síntesis pedagógica</b> del curso, no citas literales. Verifica las fuentes antes de citarlas.</p>`,
+q:[
+["¿Cuál es la diferencia entre ficha técnica y matriz de control?",["La ficha define cómo se mide; la matriz lo relaciona con metas, responsables y acciones","Son documentos idénticos","La matriz reemplaza las fórmulas","La ficha solo tiene resultados financieros"],0,"La ficha estandariza la medición; la matriz la usa para gestionar."],
+["El OTD real es 94 % y la meta 98 %. ¿Brecha en puntos porcentuales?",["−4 puntos","−4,08 puntos","+4 puntos","−6 puntos"],0,"94 − 98 = −4 puntos porcentuales; la relativa es ≈ 4,08 % de la meta."],
+["¿Cuál es la secuencia lógica correcta?",["Objetivo estratégico → objetivo logístico → proceso → indicador → meta y resultado","Indicador → proceso → objetivo → estrategia","Meta → resultado → objetivo → indicador","Proceso → resultado → estrategia"],0,"Cada indicador debe derivar de un objetivo explícito."],
+["Una empresa compara su costo por pedido con otra de operación muy distinta. ¿Primer paso?",["Verificar comparabilidad de operaciones y definiciones","Concluir que la de menor costo es más eficiente","Igualar su meta a la del competidor","Eliminar costos indirectos"],0,"Sin comparabilidad, el benchmarking crea brechas artificiales."],
+["¿Por qué un indicador en verde puede requerir acción?",["Porque su tendencia puede ser negativa","Porque el verde siempre es error","Porque no se puede medir","Porque la meta es irrelevante"],0,"La tendencia permite actuar de forma preventiva."],
+["Un responsable no tiene autoridad sobre los recursos que determinan su indicador. ¿Qué ocurre?",["Se dificulta corregir las desviaciones","Mejora la rendición de cuentas","El indicador se vuelve más preciso","No hay ningún efecto"],0,"Responsabilidad y autoridad deben ir juntas."],
+["Ante una desviación significativa de un indicador prioritario, ¿qué corresponde?",["Investigar la causa, asignar responsable y verificar las acciones","Modificar la fórmula","Esperar el cierre anual","Eliminar el indicador"],0,"El valor de la matriz está en convertir información en decisiones verificables."],
+["¿Qué tipo de benchmarking compara centros de distribución de la misma empresa?",["Interno","Competitivo","Funcional","Estratégico externo"],0,"Interno: entre unidades, períodos o rutas propios."]
+]};
+
+EXT[3]={h:`<h2>Unidad 3. Indicadores financieros y operativos</h2>
+<p><b>Objetivo:</b> traducir la operación a dinero (costo sobre ventas, costo por pedido, por tonelada, ventas perdidas) y medir el uso diario de los recursos, interpretando ambos juntos.</p>
+
+<h3>3.1 Introducción</h3>
+<p>Los indicadores <b>financieros</b> muestran cuánto cuesta operar y qué impacto económico tiene; los <b>operativos</b> muestran cómo se ejecutan los procesos, qué recursos se usan y qué volúmenes se procesan. Separarlos produce decisiones peligrosas: una empresa puede recortar vehículos para bajar costos, pero si eso causa retrasos, ventas perdidas y clientes insatisfechos, el ahorro inicial termina siendo una pérdida.</p>
+
+<h3>3.2 Conceptos financieros base</h3>
+<table class="t"><tr><th>Concepto</th><th>Significado</th></tr>
+<tr><td>Ingreso</td><td>Valor reconocido por la venta de bienes o servicios según las reglas contables</td></tr>
+<tr><td>Costo</td><td>Recursos consumidos para adquirir, producir o prestar un servicio</td></tr>
+<tr><td>Gasto</td><td>Consumo reconocido en el resultado del período que no es costo de un activo ni de lo vendido</td></tr>
+<tr><td>Margen</td><td>Diferencia o proporción entre ingresos y ciertos costos, según la definición usada</td></tr>
+<tr><td>Rentabilidad</td><td>Relación entre un resultado económico y una base (ventas, activos, capital)</td></tr></table>
+<p>El costo por pedido mide consumo promedio por pedido; <b>no</b> dice cuánto gana la empresa.</p>
+
+<h3>3.3 Costos logísticos sobre ventas (CLV)</h3>
+<p><span class="f">CLV (%) = Costos logísticos del período / Ventas netas del período × 100</span></p>
+<p><b>Variables:</b> costos logísticos dentro del alcance definido (Unidad 1) y ventas netas calculadas con criterio consistente. Un CLV de 9 % significa $9 de costo logístico por cada $100 de ventas netas. Puede bajar porque mejoró la eficiencia o simplemente porque subieron las ventas con costos iguales; por eso se lee con costos totales, volumen despachado, nivel de servicio y complejidad.</p>
+
+<h3>3.4 Costo logístico por pedido</h3>
+<p><span class="f">Costo por pedido = Costos logísticos del período / Número de pedidos incluidos</span></p>
+<p>Con $90 M y 6.000 pedidos: <b>$15.000 por pedido</b>. Es un promedio útil para presupuestar y comparar períodos, pero un pedido de una unidad no consume lo mismo que uno de 40 líneas con entrega rural. Para afinar, calcule por tipo de pedido, cliente, canal, ruta o centro de distribución. Defina qué etapa cuenta como «pedido» en el denominador (recibido, preparado, despachado o entregado).</p>
+
+<h3>3.5 Costo de transporte por unidad movilizada</h3>
+<p><span class="f">Costo por tonelada = Costo de transporte / Toneladas transportadas</span></p>
+<p>$48 M por 240 t = <b>$200.000 por tonelada</b>. Para comparar rutas, considere distancia, peajes, tipo de vehículo, características de la carga, restricciones de acceso y nivel de servicio. Cuando volumen, peso y distancia varían mucho, es más justo usar costo por tonelada-kilómetro o indicadores por ruta. Un trayecto de banano de Urabá a puerto y uno de carga mixta a Medellín no se comparan con un solo promedio.</p>
+<details class="fq"><summary>Comprueba: la ruta A cuesta $150.000/t y la B $230.000/t. ¿La B es ineficiente?</summary>No se sabe. Puede tener más distancia, peajes, carga difícil o un nivel de servicio mayor. Antes de juzgar hay que segmentar por ruta y normalizar por distancia.</details>
+
+<h3>3.6 Indicadores operativos de recursos</h3>
+<ul><li><b>Pedidos procesados:</b> defina si cuenta recibidos, aceptados, preparados, despachados o entregados; no son equivalentes.</li><li><b>Volumen movilizado:</b> toneladas, unidades, m³, pallets o movimientos, según la operación.</li><li><b>Utilización:</b> <span class="f">Utilización (%) = Capacidad utilizada / Capacidad disponible × 100</span>, con ambas magnitudes en la misma unidad. Si 820 de 1.000 posiciones están ocupadas, la utilización es <b>82 %</b>.</li></ul>
+<p>Una utilización alta no implica buena gestión: si la bodega se llena al punto de dificultar recepción y alistamiento, pierde flexibilidad. Distinga capacidad física nominal, capacidad operativa utilizable y capacidad que conviene mantener libre para absorber variaciones de demanda.</p>
+
+<h3>3.7 Ventas perdidas por falta de disponibilidad</h3>
+<p>Las ventas perdidas son oportunidades no concretadas por una causa identificada. La falta de inventario es una causa posible, pero no toda venta no realizada es atribuible a logística. Se requiere una metodología que identifique solicitudes no atendidas, estime su valor y evite contar dos veces la misma oportunidad.</p>
+<p><span class="f">Demanda no atendida por falta de stock (%) = Valor estimado de demanda no atendida por falta de stock / Valor de demanda potencial definida × 100</span></p>
+<p>Con $20 M no atendidos sobre $500 M de demanda potencial: <b>4 %</b>. Esto <b>no</b> significa $20 M de utilidad perdida: hay que descontar costos variables que se habrían incurrido, la posibilidad de recuperar la venta después y la incertidumbre de la estimación. La demanda potencial debe ser explícita y verificable (solicitudes registradas, pedidos rechazados o un modelo documentado).</p>
+
+<h3>3.8 Costo de mantener inventario</h3>
+<p>Mantener inventario genera almacenamiento, seguros, deterioro, obsolescencia, manipulación y costo de oportunidad del capital. Aproximación gerencial:</p>
+<p><span class="f">Costo anual de mantenimiento = Inventario promedio × Tasa anual de mantenimiento</span></p>
+<p>Con inventario promedio de $300 M y tasa de 18 %: <b>$54 M al año</b>. La tasa debe construirse con componentes definidos y sin duplicar costos ya incluidos en otras cuentas, y el inventario se valora con una base consistente (costo contable promedio), no mezclando costo de adquisición con precio de venta.</p>
+
+<h3>3.9 Caso resuelto: evaluación conjunta</h3>
+<p>Distribuciones del Urabá en el mes: ventas netas $900 M; costos logísticos identificados $99 M; 5.500 pedidos; transporte $45 M por 225 t; demanda no atendida $18 M sobre $450 M.</p>
+<table class="t"><tr><th>Indicador</th><th>Cálculo</th><th>Resultado</th></tr>
+<tr><td>CLV</td><td>99 / 900 × 100</td><td>11 %</td></tr>
+<tr><td>Costo por pedido</td><td>99.000.000 / 5.500</td><td>$18.000</td></tr>
+<tr><td>Costo por tonelada</td><td>45.000.000 / 225</td><td>$200.000</td></tr>
+<tr><td>Demanda no atendida</td><td>18 / 450 × 100</td><td>4 %</td></tr></table>
+<p><b>Interpretación conjunta:</b> $18.000 por pedido puede ser razonable o excesivo según la complejidad de los pedidos; $200.000/t varía con ruta y distancia; un 4 % de demanda no atendida es una oportunidad importante, pero hay que validar los registros y las causas. La dirección debe preguntarse si una mejor planificación de inventarios reduce las ventas perdidas sin disparar el costo de almacenamiento.</p>
+
+<h3>3.10 Errores frecuentes</h3>
+<table class="t"><tr><th>Error</th><th>Consecuencia</th><th>Prevención</th></tr>
+<tr><td>Comparar costos absolutos sin volumen</td><td>Se confunde crecimiento con ineficiencia</td><td>Usar indicadores unitarios y proporciones</td></tr>
+<tr><td>Toda venta no realizada = venta perdida por logística</td><td>Se atribuyen causas comerciales o externas</td><td>Registrar el motivo de la demanda no atendida</td></tr>
+<tr><td>Costos entre pedidos recibidos cuando se quiere costo por pedido entregado</td><td>Denominadores distintos</td><td>Definir la etapa del proceso en el denominador</td></tr>
+<tr><td>Utilización máxima como meta universal</td><td>Congestión y pérdida de flexibilidad</td><td>Evaluar capacidad, demanda y servicio</td></tr>
+<tr><td>Costo por tonelada sin revisar rutas</td><td>Comparaciones poco representativas</td><td>Segmentar por distancia, carga y condiciones</td></tr></table>
+
+<h3>3.11 Actividad de aplicación</h3>
+<p>Ventas netas $640 M; costos logísticos $70,4 M; 4.400 pedidos; transporte $32 M para 160 t. Calcule CLV, costo por pedido y costo por tonelada; proponga una decisión de mejora y dos indicadores adicionales para evaluar sus efectos.</p>
+<details class="fq"><summary>Ver solución orientativa</summary>CLV = 70,4/640 × 100 = 11 %. Costo por pedido = 70.400.000/4.400 = $16.000. Costo por tonelada = 32.000.000/160 = $200.000. Mejora posible: consolidar despachos cuando el servicio lo permita; controlar a la vez costo de transporte y cumplimiento de plazos (OTD) para evitar que la consolidación genere retrasos.</details>
+
+<h3>3.12 Síntesis y glosario</h3>
+<p>Debes poder calcular e interpretar indicadores financieros y operativos, diferenciar costos absolutos y unitarios, estimar el impacto de la falta de disponibilidad y explicar por qué los resultados se leen en conjunto. Dominar la unidad es pasar del cálculo aritmético a la interpretación económica y a la decisión fundamentada.</p>
+<p><b>Demanda potencial:</b> demanda que la empresa define y puede verificar. <b>Capacidad operativa:</b> capacidad realmente utilizable. <b>Inventario promedio:</b> valor medio del inventario en el período. <b>Tonelada-kilómetro:</b> una tonelada movida un kilómetro.</p>
+<p class="ref"><b>Lectura sugerida:</b> Ballou, <i>Logística: administración de la cadena de suministro</i> (costos de mantener inventario y costos de transporte); Bowersox, Closs y Cooper, <i>Supply Chain Logistics Management</i>. <b>Aclaración:</b> las fórmulas de costo por pedido, costo por tonelada, demanda no atendida y la tasa de mantenimiento son <b>herramientas gerenciales y síntesis pedagógica</b> del curso, no citas de esas obras ni partidas contables normalizadas. Verifica fuentes antes de citarlas.</p>`,
+q:[
+["Una empresa tiene $90 M de costos logísticos y procesa 6.000 pedidos. ¿Costo por pedido?",["$15.000","$1.500","$54.000","$90.000"],0,"90.000.000 / 6.000 = $15.000."],
+["Pagó $48 M por transportar 240 toneladas. ¿Costo por tonelada?",["$200.000","$20.000","$480.000","$2.000.000"],0,"48.000.000 / 240 = $200.000."],
+["820 de 1.000 posiciones están ocupadas. ¿Utilización?",["82 %","18 %","8,2 %","122 %"],0,"820/1.000 × 100 = 82 %; una utilización alta no implica buena gestión."],
+["Inventario promedio $300 M y tasa anual de mantenimiento del 18 %. ¿Costo anual?",["$54 M","$18 M","$30 M","$300 M"],0,"300 × 0,18 = $54 M."],
+["Demanda no atendida por falta de stock: $20 M sobre $500 M de demanda potencial. ¿Indicador y lectura correcta?",["4 %; no equivale a utilidad perdida","4 %; equivale a $20 M de utilidad perdida","25 %; es la utilidad perdida","2,5 %; es el margen"],0,"Hay que descontar costos variables, posible recuperación e incertidumbre."],
+["Baja el costo por pedido pero aumentan las entregas tardías. ¿Lectura correcta?",["Evaluar la reducción de costos junto con el nivel de servicio","El desempeño mejoró necesariamente","El OTD dejó de ser relevante","El costo por pedido mide la rentabilidad total"],0,"Una mejora financiera aislada no garantiza un mejor resultado integral."],
+["¿Por qué un costo por pedido promedio puede inducir a error?",["Porque pedidos de distinta complejidad consumen recursos distintos","Porque siempre es incorrecto","Porque solo sirve para exportaciones","Porque no incluye costos"],0,"Conviene segmentar por tipo de pedido, cliente, canal o ruta."],
+["Ventas $900 M y costos logísticos $99 M. ¿CLV?",["11 %","9 %","10 %","0,11 %"],0,"99/900 × 100 = 11 %."]
+]};
+
+EXT[4]={h:`<h2>Unidad 4. Indicadores de tiempo: Lead Time y cumplimiento de entregas</h2>
+<p><b>Objetivo:</b> medir la velocidad del flujo logístico con el Lead Time (ciclo del pedido) y el OTD (On-Time Delivery), identificando dónde se consume el tiempo y por qué.</p>
+
+<h3>4.1 Introducción: por qué el tiempo es crítico</h3>
+<p>El tiempo entre el inicio y el fin de una actividad condiciona la disponibilidad del producto, el inventario necesario, el uso de recursos y la capacidad de cumplir compromisos. Una empresa puede tener inventario y vehículos adecuados y aun así servir mal si los pedidos esperan demasiado para procesarse, si el despacho se programa tarde o si la entrega no llega en el plazo acordado. Los indicadores de tiempo responden: ¿cuánto tarda un pedido de punta a punta?, ¿en qué etapa se concentra la demora?, ¿qué proporción cumple la fecha prometida?, ¿qué parte del ciclo es trabajo efectivo y qué parte es espera?</p>
+
+<h3>4.2 Concepto de Lead Time</h3>
+<p>El <b>Lead Time</b> es el tiempo transcurrido entre dos eventos definidos de un proceso. No existe un único Lead Time: depende del punto inicial y final que la empresa establezca y documente.</p>
+<table class="t"><tr><th>Tipo</th><th>Inicio</th><th>Fin</th></tr>
+<tr><td>Aprovisionamiento</td><td>Emisión o confirmación del pedido al proveedor (según definición)</td><td>Recepción de la mercancía</td></tr>
+<tr><td>Recepción</td><td>Llegada del vehículo o inicio formal de recepción</td><td>Mercancía recibida y registrada</td></tr>
+<tr><td>Preparación</td><td>Liberación del pedido</td><td>Pedido preparado y verificado</td></tr>
+<tr><td>Transporte</td><td>Salida del vehículo</td><td>Llegada al destino acordado</td></tr>
+<tr><td>Pedido al cliente</td><td>Recepción válida del pedido</td><td>Entrega final según el evento definido</td></tr></table>
+<p>Si una empresa mide desde que el pedido ingresa al sistema y otra desde que ya está autorizado para despacho, sus resultados no son comparables.</p>
+
+<h3>4.3 Lead Time total del pedido</h3>
+<p><span class="f">LT = Tr + Tp + Td + Tt + Te</span>, con Tr = revisión y liberación, Tp = preparación, Td = espera y procesamiento del despacho, Tt = transporte, Te = entrega y confirmación. La suma es válida solo si los intervalos son consecutivos, sin superposiciones ni huecos. Si hay actividades en paralelo, el tiempo total es el intervalo real entre el evento inicial y el final, no la suma de todas las duraciones.</p>
+<p><b>Ejemplo:</b> 2 h revisión + 3 h preparación + 4 h espera de despacho + 5 h transporte + 1 h entrega = <b>15 horas</b>. Cuatro horas se pierden esperando despacho: esa etapa merece investigarse antes de comprar vehículos más rápidos.</p>
+
+<h3>4.4 Tiempo de procesamiento frente a tiempo de espera</h3>
+<p><b>Procesamiento:</b> período en que se ejecuta una actividad que prepara, verifica o desplaza mercancía o información. <b>Espera:</b> período en que el pedido está detenido a la espera de autorización, recurso, programación, disponibilidad o fin de otra actividad. Un proceso puede tener pocas horas de trabajo efectivo y un Lead Time largo porque pasa la mayor parte detenido. Esto abre mejoras que no exigen que la gente trabaje más rápido: eliminar autorizaciones innecesarias, secuenciar mejor el alistamiento, asegurar disponibilidad o coordinar horarios de despacho.</p>
+<details class="fq"><summary>Comprueba: un pedido tiene 18 h de Lead Time y solo 7 h son trabajo efectivo. ¿Dónde buscar la mejora?</summary>En las 11 h de espera: autorizaciones, colas, programación de despachos o falta de producto. Acelerar el trabajo efectivo atacaría una parte menor del problema.</details>
+
+<h3>4.5 Lead Time promedio, mediana y percentiles</h3>
+<p><span class="f">LT promedio = Σ LTi / n</span>. Con 12, 14, 15, 17 y 22 horas: (12+14+15+17+22)/5 = <b>16 h</b>. El promedio oculta la distribución: un pedido de 22 h convive con otros mucho más rápidos. Por eso se complementa con la <b>mediana</b> (valor central; aquí 15 h) y los <b>percentiles</b> (el percentil 90 indica el tiempo dentro del cual se completó el 90 % de los pedidos) y con la proporción de pedidos que superan el tiempo objetivo.</p>
+
+<h3>4.6 OTD: On-Time Delivery</h3>
+<p>Mide el porcentaje de entregas dentro del plazo comprometido. Antes de calcular, defina: qué evento cuenta como entrega, cuál es la fecha y hora prometida, qué evidencia confirma la entrega, cómo se tratan cambios de fecha autorizados y entregas parciales, y qué pedidos entran o salen del denominador.</p>
+<p><span class="f">OTD (%) = Entregas realizadas a tiempo / Total de entregas evaluables × 100</span></p>
+<p>Con 465 de 500 entregas a tiempo: <b>93 %</b>; 35 entregas incumplieron. Causas por investigar: retrasos de preparación, fallas de programación, indisponibilidad de vehículos, restricciones de acceso, direcciones erradas o condiciones externas de transporte (en Urabá, lluvias y estado de las vías son factores reales que deben registrarse como causa, no ocultarse).</p>
+
+<h3>4.7 Fecha prometida, programada y real</h3>
+<table class="t"><tr><th>Fecha</th><th>Qué es</th><th>Uso</th></tr>
+<tr><td>Prometida</td><td>Compromiso comunicado y aceptado por el cliente</td><td>Referencia del OTD</td></tr>
+<tr><td>Programada</td><td>Fecha prevista en la planificación interna</td><td>Control interno</td></tr>
+<tr><td>Real</td><td>Momento en que ocurre el evento de entrega</td><td>Se compara contra la prometida</td></tr></table>
+<p>Si la empresa prometió el jueves pero programó el viernes y usa la programación como referencia, oculta el incumplimiento. Los cambios de fecha solo son válidos si el cliente los solicita y la empresa los acepta formalmente; no se modifican fechas retrospectivamente para mejorar el indicador.</p>
+
+<h3>4.8 Cumplimiento del tiempo de ciclo</h3>
+<p><span class="f">Cumplimiento del LT (%) = Pedidos completados dentro del tiempo objetivo / Total de pedidos evaluables × 100</span></p>
+<p>Objetivo de 24 h máximo: de 800 pedidos, 720 cumplen: <b>90 %</b>. No equivale al OTD: este compara la duración con un límite de ciclo; el OTD compara la entrega con el compromiso temporal aplicable.</p>
+
+<h3>4.9 Caso resuelto: reducción del Lead Time</h3>
+<p>Ciclo típico de Distribuciones del Urabá: validación 1 h; preparación 4 h; espera de consolidación 5 h; transporte 6 h; entrega 2 h = <b>18 h</b>. Con despachos programados con más frecuencia, la espera baja a 2 h:</p>
+<p><span class="f">LT = 1 + 4 + 2 + 6 + 2 = 15 h</span> · reducción = 3 h · <span class="f">(18 − 15)/18 × 100 = 16,67 %</span></p>
+<p>Antes de generalizar hay que verificar si la nueva programación sube el costo de transporte, baja la ocupación de los vehículos o afecta la capacidad de alistamiento, y confirmarlo con varios períodos, no con un caso representativo.</p>
+
+<h3>4.10 Cuellos de botella</h3>
+<p>Un <b>cuello de botella</b> es la etapa que restringe el flujo total. Se identifica comparando tiempos por etapa, midiendo colas de pedidos pendientes, revisando la utilización de recursos, analizando pedidos detenidos y contrastando capacidad requerida con disponible. La etapa más larga no siempre es el cuello de botella: debe además limitar el flujo, acumular trabajo pendiente y tener capacidad insuficiente frente a la demanda.</p>
+
+<h3>4.11 Errores frecuentes</h3>
+<table class="t"><tr><th>Error</th><th>Consecuencia</th><th>Prevención</th></tr>
+<tr><td>Medir el Lead Time desde eventos distintos</td><td>Resultados no comparables</td><td>Definir con precisión inicio y fin</td></tr>
+<tr><td>Usar solo promedios</td><td>Se ocultan pedidos muy demorados</td><td>Analizar mediana y percentiles</td></tr>
+<tr><td>Modificar fechas prometidas a posteriori</td><td>Se ocultan incumplimientos</td><td>Controlar cambios y autorizaciones</td></tr>
+<tr><td>Confundir OTD con OTIF</td><td>Se ignora la completitud</td><td>Medir tiempo y completitud por separado</td></tr>
+<tr><td>Acelerar el trabajo sin rediseñar el proceso</td><td>Más errores e incidentes</td><td>Eliminar esperas y mejorar el diseño</td></tr>
+<tr><td>Excluir pedidos tardíos sin regla</td><td>Indicador inflado</td><td>Documentar inclusión y exclusión</td></tr></table>
+
+<h3>4.12 Actividad de aplicación</h3>
+<p>Seis pedidos con ciclos de 12, 16, 14, 20, 18 y 28 horas; objetivo: 90 % en máximo 20 h. Calcule el promedio, la mediana, cuántos cumplen, el porcentaje de cumplimiento; proponga cómo investigar las demoras y explique por qué el promedio no basta.</p>
+<details class="fq"><summary>Ver solución orientativa</summary>Suma = 108 h; promedio = 18 h. Ordenados: 12, 14, 16, 18, 20, 28; mediana = (16+18)/2 = 17 h. Cumplen 5 de 6: 83,33 %, por debajo del 90 %. Investigue el pedido de 28 h por etapa y busque patrones similares. El promedio de 18 h parece cumplir el límite y esconde que un pedido lo supera por 8 horas.</details>
+
+<h3>4.13 Síntesis y glosario</h3>
+<p>Debes poder definir los límites temporales de un proceso, calcular el Lead Time, distinguir procesamiento de espera, interpretar distribuciones, calcular el OTD, identificar cuellos de botella y proponer mejoras sin deteriorar calidad ni seguridad.</p>
+<p><b>Lead Time:</b> tiempo entre dos eventos definidos. <b>OTD:</b> porcentaje de entregas a tiempo. <b>Percentil 90:</b> valor bajo el cual está el 90 % de las observaciones. <b>Cuello de botella:</b> etapa que limita el flujo. <b>Fecha prometida:</b> compromiso aceptado con el cliente.</p>
+<p class="ref"><b>Lectura sugerida:</b> Chopra y Meindl, <i>Administración de la cadena de suministro</i>; modelo SCOR (ASCM) para métricas de confiabilidad y capacidad de respuesta. <b>Aclaración:</b> las definiciones de Lead Time por tipo, la descomposición LT = Tr + Tp + Td + Tt + Te y las reglas sobre fechas son una <b>síntesis pedagógica</b> del curso; en la práctica cada empresa define sus eventos de inicio y fin. Verifica fuentes antes de citarlas.</p>`,
+q:[
+["Un pedido tarda 2 h en validación, 4 en preparación, 3 en espera de despacho y 5 en transporte (consecutivas). ¿Lead Time total?",["14 horas","9 horas","12 horas","15 horas"],0,"2+4+3+5 = 14 h."],
+["Una empresa entrega 940 de 1.000 pedidos dentro del plazo prometido. ¿OTD?",["94 %","6 %","96 %","106 %"],0,"940/1.000 × 100 = 94 %."],
+["¿Por qué el promedio del Lead Time no basta para evaluar el desempeño?",["Puede ocultar pedidos excepcionalmente demorados","Porque no se puede calcular","Porque siempre coincide con la mediana","Porque solo mide tiempo administrativo"],0,"Se complementa con mediana, percentiles y proporción fuera del objetivo."],
+["¿Contra qué fecha debe medirse el OTD?",["La fecha prometida al cliente","La fecha programada internamente","Una fecha ajustada después del hecho","La fecha de facturación"],0,"La programación interna puede ocultar el incumplimiento."],
+["Ciclos de 12, 14, 16, 18, 20 y 28 h. ¿Mediana?",["17 horas","18 horas","16 horas","20 horas"],0,"Promedio de los dos centrales: (16+18)/2 = 17."],
+["Con 5 horas de espera reducidas a 2 en un ciclo de 18 h, ¿reducción porcentual del Lead Time?",["16,67 %","3 %","30 %","12,5 %"],0,"(18 − 15)/18 × 100 = 16,67 %."],
+["¿Cuál es la principal diferencia entre Lead Time y tiempo de procesamiento?",["El Lead Time puede incluir procesamiento y espera","Son equivalentes","El procesamiento incluye siempre todo el transporte","El Lead Time solo mide tiempo administrativo"],0,"El Lead Time abarca el intervalo completo entre dos eventos definidos."],
+["Una empresa reduce su Lead Time pero aumentan los errores de preparación. ¿Qué debe hacer?",["Analizar tiempo, calidad y condiciones operativas conjuntamente","Mantener la mejora sin revisar calidad","Eliminar el indicador de errores","Cambiar el denominador del OTD"],0,"La rapidez debe evaluarse junto con calidad y seguridad."]
+]};
+
+EXT[5]={h:`<h2>Unidad 5. Indicadores de calidad logística</h2>
+<p><b>Objetivo:</b> evaluar la perfección de la ejecución: exactitud del inventario, errores de preparación, daños, devoluciones y las variables que componen un Pedido Perfecto.</p>
+
+<h3>5.1 Introducción: qué es calidad en logística</h3>
+<p>Es el grado en que procesos y resultados cumplen los requisitos definidos para recibir, conservar, preparar, transportar y entregar mercancías. No se limita a evitar daños físicos: incluye preservar la identidad del producto, mantener registros confiables, respetar cantidades, usar documentación correcta y cumplir las condiciones de entrega. Un pedido puede llegar a tiempo y ser un mal servicio si trae referencias equivocadas, unidades faltantes o producto dañado.</p>
+<table class="t"><tr><th>Concepto</th><th>Definición</th></tr>
+<tr><td>Calidad</td><td>Grado en que las características de un producto, servicio o proceso satisfacen requisitos establecidos</td></tr>
+<tr><td>Conformidad</td><td>Cumplimiento de un requisito específico</td></tr>
+<tr><td>Satisfacción del cliente</td><td>Percepción del cliente sobre sus expectativas y necesidades</td></tr></table>
+<p>No son idénticos: se puede cumplir la especificación y recibir una mala evaluación por algo no medido, como la comunicación sobre el estado del pedido o la facilidad de reclamar.</p>
+
+<h3>5.2 Exactitud del inventario</h3>
+<p>Evalúa la concordancia entre cantidades registradas en el sistema y cantidades físicas verificadas. Las diferencias pueden venir de errores de recepción, movimientos no registrados, despachos con cantidades incorrectas, errores de ubicación o identificación, unidades de medida inconsistentes, daños, pérdidas, errores de conteo o transacciones registradas en fecha distinta de la operación física. No se atribuye automáticamente a robo: primero se investiga la causa.</p>
+<table class="t"><tr><th>Método</th><th>Fórmula</th><th>Qué responde</th></tr>
+<tr><td>Por referencias</td><td>Referencias sin diferencias / Referencias verificadas × 100</td><td>¿Qué proporción de referencias coincide exactamente?</td></tr>
+<tr><td>Por unidades</td><td>(1 − Σ|físico − sistema| / Σ físico) × 100</td><td>¿Qué tan cerca está lo registrado de lo físico en cantidades?</td></tr></table>
+<p>Con 200 referencias verificadas y 190 coincidentes: <b>95 %</b> por referencias. Este método cuenta igual una diferencia de una unidad y una de cien. El segundo exige denominador positivo, unidades comparables y reglas para sobrantes, faltantes y referencias sin existencia física. No se mezclan ambos resultados: responden preguntas distintas.</p>
+<details class="fq"><summary>Comprueba: una bodega reporta «98 % de exactitud» sin decir el método. ¿Qué falta?</summary>Falta saber si es por referencias, unidades o valor. Sin eso la cifra no es comparable con otros períodos ni con otras bodegas.</details>
+
+<h3>5.3 Caso resuelto: conteo de cinco referencias</h3>
+<table class="t"><tr><th>Ref.</th><th>Sistema</th><th>Físico</th><th>Dif. absoluta</th></tr>
+<tr><td>A</td><td>100</td><td>100</td><td>0</td></tr><tr><td>B</td><td>80</td><td>78</td><td>2</td></tr><tr><td>C</td><td>60</td><td>60</td><td>0</td></tr><tr><td>D</td><td>40</td><td>35</td><td>5</td></tr><tr><td>E</td><td>20</td><td>20</td><td>0</td></tr><tr><td>Total</td><td>300</td><td>293</td><td>7</td></tr></table>
+<p>Por referencias: <span class="f">3/5 × 100 = 60 %</span>. Por unidades: <span class="f">(1 − 7/293) × 100 ≈ 97,61 %</span>. Ninguno es «el correcto»: el primero identifica cuántas referencias tienen discrepancia; el segundo estima la coincidencia cuantitativa. Conviene presentar ambos para que una sola cifra no esconda diferencias relevantes.</p>
+
+<h3>5.4 Errores de preparación</h3>
+<p>Ocurren cuando el pedido alistado no corresponde a los requisitos: referencia equivocada, cantidad incorrecta, omisión de productos, daño en la manipulación, etiquetado erróneo, lote o vencimiento inadecuado cuando son obligatorios, o mezcla de pedidos de clientes distintos.</p>
+<p><span class="f">Tasa de errores (%) = Pedidos con uno o más errores / Total de pedidos evaluados × 100</span></p>
+<p>45 pedidos con errores de 1.500: <b>3 %</b>; pedidos sin errores: 100 % − 3 % = <b>97 %</b>. Se distingue entre pedidos con errores y cantidad total de errores: un pedido con tres errores cuenta una sola vez en este indicador.</p>
+
+<h3>5.5 Daños y devoluciones</h3>
+<p><b>Tasa de daños:</b> <span class="f">Unidades dañadas / Unidades manipuladas o despachadas × 100</span> (también por pedidos afectados o por valor). Defina el denominador y el momento en que se considera ocurrido el daño.</p>
+<p><b>Devoluciones logísticas:</b> no toda devolución es responsabilidad de logística (puede ser decisión comercial, característica del producto, error del cliente o cambio de preferencia). Se miden solo las de causa logística: referencia equivocada, faltante, daño en transporte.</p>
+<p><span class="f">Tasa de devoluciones logísticas (%) = Pedidos devueltos por causa logística / Pedidos entregados evaluables × 100</span> · 30 de 1.200 → <b>2,5 %</b>.</p>
+<details class="fq"><summary>Comprueba: un cliente devuelve producto porque cambió de opinión. ¿Entra en la tasa logística?</summary>No. Su causa es comercial o del cliente. Si se incluyera, se atribuiría a logística un resultado que no controla y se desvirtuaría el indicador.</details>
+
+<h3>5.6 El Pedido Perfecto</h3>
+<p>Es una medida integral: evalúa si una entrega cumple <b>simultáneamente</b> los requisitos definidos del servicio. Puede incluir entrega a tiempo, entrega completa, exactitud de productos y cantidades, documentación correcta, ausencia de daños y otros requisitos esenciales acordados con el cliente. Su composición debe documentarse según el modelo de servicio; si varía entre períodos o áreas, los resultados dejan de ser comparables. En su versión más exigente, un pedido solo es perfecto si cumple todos los criterios obligatorios: uno puntual pero con faltantes no lo es.</p>
+
+<h3>5.7 Caso resuelto: calidad de 1.000 pedidos</h3>
+<table class="t"><tr><th>Dimensión</th><th>Pedidos</th><th>Resultado</th></tr>
+<tr><td>A tiempo</td><td>950</td><td>95 %</td></tr><tr><td>Completos</td><td>970</td><td>97 %</td></tr><tr><td>Referencias y cantidades correctas</td><td>980</td><td>98 %</td></tr><tr><td>Sin daños</td><td>960</td><td>96 %</td></tr><tr><td>Documentación correcta</td><td>990</td><td>99 %</td></tr></table>
+<p>No es correcto decir que el Pedido Perfecto es 95 % porque ese sea el menor porcentaje: los incumplimientos pueden recaer en pedidos distintos. Hay que cruzar los registros y contar cuántos pedidos cumplieron todo a la vez. Si 900 lo hicieron: <span class="f">PP = 900/1.000 × 100 = 90 %</span>. Con todos los indicadores individuales entre 95 % y 99 %, el integral es 90 % porque el pedido debe cumplir las cinco condiciones al tiempo.</p>
+
+<h3>5.8 Cómo investigar causas</h3>
+<p>Medir muestra la magnitud, no el porqué. Herramientas: el <b>análisis de Pareto</b> (ordena problemas por frecuencia o impacto para priorizar) y el <b>diagrama de causa y efecto</b> (agrupa causas por categoría). Revise métodos de trabajo, personas y capacitación, equipos y tecnología, diseño del almacenamiento, identificación de productos, calidad de la información, condiciones de transporte y procedimientos de verificación. Las causas se comprueban con evidencia: no basta concluir «falta capacitación» si los registros muestran que la mayoría de errores nace de ubicaciones mal identificadas.</p>
+
+<h3>5.9 Errores frecuentes</h3>
+<table class="t"><tr><th>Error</th><th>Consecuencia</th><th>Prevención</th></tr>
+<tr><td>Medir exactitud sin definir método</td><td>Resultados no comparables</td><td>Especificar referencias, unidades o valor</td></tr>
+<tr><td>Contar cada error como un pedido defectuoso</td><td>Sobrestima pedidos afectados</td><td>Diferenciar pedidos con errores y número de errores</td></tr>
+<tr><td>Atribuir toda devolución a logística</td><td>Responsabilidades mal asignadas</td><td>Clasificar devoluciones por causa</td></tr>
+<tr><td>Perfecto = llegó a tiempo</td><td>Se ignoran faltantes y daños</td><td>Verificar cumplimiento simultáneo</td></tr>
+<tr><td>Cambiar criterios de inspección entre períodos</td><td>Distorsiona la evolución</td><td>Mantener procedimientos consistentes</td></tr></table>
+
+<h3>5.10 Actividad de aplicación</h3>
+<p>Se inspeccionan 400 referencias y 372 coinciden. En el mes se procesan 2.000 pedidos y 60 tienen al menos un error. De 1.500 pedidos entregados, 18 se devuelven por causas logísticas. Calcule exactitud por referencias, tasa de errores y tasa de devoluciones logísticas; proponga dos causas por investigar y una acción correctiva con su indicador de verificación.</p>
+<details class="fq"><summary>Ver solución orientativa</summary>Exactitud: 372/400 = 93 %. Errores: 60/2.000 = 3 %. Devoluciones: 18/1.500 = 1,2 %. Causas por investigar: movimientos de inventario no registrados y errores de identificación de productos. Acción: reforzar la validación de ubicaciones y referencias en alistamiento; verificar con exactitud por referencias y tasa de errores en los períodos siguientes.</details>
+
+<h3>5.11 Síntesis y glosario</h3>
+<p>Debes poder medir la exactitud del inventario, calcular tasas de errores y devoluciones, distinguir causas logísticas de otras y comprender el carácter integral del Pedido Perfecto. Un indicador describe un resultado; la mejora exige investigar las causas y verificar los efectos de las acciones.</p>
+<p><b>Conformidad:</b> cumplimiento de un requisito. <b>Pareto:</b> priorización por frecuencia o impacto. <b>Referencia (SKU):</b> código único de un producto. <b>Pedido Perfecto:</b> pedido que cumple todos los criterios definidos a la vez.</p>
+<p class="ref"><b>Lectura sugerida:</b> modelo SCOR (ASCM), métrica de cumplimiento de pedido perfecto (<i>Perfect Order Fulfillment</i>); Frazelle, <i>World-Class Warehousing and Material Handling</i>, sobre exactitud de inventario y desempeño de bodegas. <b>Aclaración:</b> los dos métodos de exactitud, los criterios de Pedido Perfecto y los cálculos presentados son <b>herramientas de gestión y síntesis pedagógica</b>; la composición exacta de un Pedido Perfecto varía entre empresas y modelos. Verifica fuentes antes de citarlas.</p>`,
+q:[
+["Se inspeccionan 400 referencias y 372 coinciden exactamente con el sistema. ¿Exactitud por referencias?",["93 %","7 %","96 %","97,5 %"],0,"372/400 × 100 = 93 %."],
+["45 de 1.500 pedidos presentan al menos un error. ¿Tasa de errores?",["3 %","45 %","30 %","0,3 %"],0,"45/1.500 × 100 = 3 %."],
+["Un pedido llega a tiempo pero con una referencia equivocada. ¿Es Pedido Perfecto?",["No, si la exactitud forma parte de los requisitos","Sí, el tiempo es lo único relevante","Sí, si el cliente no reclama","Sí, si la documentación es correcta"],0,"Debe cumplir todos los requisitos definidos a la vez."],
+["30 de 1.200 pedidos entregados se devuelven por causa logística. ¿Tasa?",["2,5 %","3 %","4 %","25 %"],0,"30/1.200 × 100 = 2,5 %."],
+["¿Por qué puede haber exactitud por unidades alta y exactitud por referencias baja?",["Porque pocas referencias con diferencias pequeñas rompen la coincidencia exacta aunque casi todas las unidades estén bien registradas","Porque los indicadores son incompatibles","Porque el inventario no se puede medir","Porque ambos deben dar siempre el mismo valor"],0,"Miden aspectos distintos y deben interpretarse según su fórmula."],
+["Cada uno de cinco indicadores individuales está entre 95 % y 99 %. ¿El Pedido Perfecto es 95 %?",["No necesariamente; hay que contar los pedidos que cumplen todos los criterios a la vez","Sí, es el menor de los cinco","Sí, es el promedio","No, siempre es 99 %"],0,"Los incumplimientos pueden recaer en pedidos distintos; el integral suele ser menor."],
+["Un pedido tiene tres errores distintos. En la tasa de pedidos con errores, ¿cuántas veces cuenta?",["Una vez","Tres veces","Cero","Depende del cliente"],0,"El indicador cuenta pedidos afectados, no errores."],
+["Ante una tasa elevada de errores de preparación, ¿la mejor acción es?",["Identificar causas con evidencia, priorizar e implementar medidas verificables","Aumentar la velocidad de preparación","Excluir los pedidos con varios errores","Cambiar la definición de pedido correcto"],0,"La mejora debe dirigirse a causas comprobadas."]
+]};
+
+EXT[6]={h:`<h2>Unidad 6. Indicadores de productividad logística</h2>
+<p><b>Objetivo:</b> medir la eficiencia en el uso de recursos (horas-hombre, espacio, equipos, vehículos) para maximizar resultados sin deteriorar calidad, seguridad ni condiciones de trabajo.</p>
+
+<h3>6.1 Introducción: qué es la productividad</h3>
+<p>La <b>productividad</b> es la relación entre los resultados obtenidos y los recursos empleados para producirlos. En logística evalúa qué tan bien se usan las horas de trabajo, los equipos, las instalaciones y los vehículos. No consiste en exigir que alguien trabaje más rápido: una operación puede subir los pedidos procesados y, al mismo tiempo, aumentar errores, daños, accidentes u horas extra, y el resultado global sería desfavorable. Por eso se analiza junto con calidad, tiempo, seguridad y costo.</p>
+<table class="t"><tr><th>Concepto</th><th>Definición</th><th>Ejemplo (1.000 pedidos previstos)</th></tr>
+<tr><td>Productividad</td><td>Resultados obtenidos por recurso empleado</td><td>Prepara 1.000 pedidos con menos horas-hombre que el estándar</td></tr>
+<tr><td>Eficiencia</td><td>Uso de recursos frente a un estándar o alternativa</td><td>Consume 380 HH frente a 400 previstas</td></tr>
+<tr><td>Eficacia</td><td>Grado en que se alcanzan los objetivos</td><td>Prepara 950: no logra el objetivo de volumen</td></tr></table>
+<p>Se pueden alcanzar los 1.000 pedidos a tiempo (eficaz en volumen) con muchos errores (no en calidad). La evaluación completa exige mirar las tres dimensiones.</p>
+
+<h3>6.2 Productividad de la mano de obra</h3>
+<p><span class="f">Productividad laboral = Unidades de resultado / Horas-hombre empleadas</span></p>
+<p>El resultado puede ser pedidos, líneas, cajas o toneladas por hora-hombre. Una <b>hora-hombre (HH)</b> es una hora de trabajo de una persona: cuatro trabajadores durante seis horas efectivas son 24 HH. Defina qué tiempo cuenta (horas efectivamente trabajadas, tiempo pagado, horas extra, actividades indirectas, esperas) y mantenga la metodología estable o documente el cambio.</p>
+<p><b>Ejemplo:</b> 5 trabajadores × 6 h = 30 HH; 360 pedidos / 30 HH = <b>12 pedidos por HH</b>. Para juzgarlo hay que considerar la complejidad de los pedidos, la calidad del alistamiento, las condiciones de trabajo y el estándar operativo.</p>
+<details class="fq"><summary>Comprueba: dos equipos preparan 300 pedidos; uno con 5 trabajadores y otro con 4, ambos 6 h. ¿Cuál es más productivo?</summary>El de 4: 300/24 = 12,5 pedidos/HH frente a 300/30 = 10. Antes de concluir, verifica que la complejidad de los pedidos (líneas, peso) y la calidad sean comparables.</details>
+
+<h3>6.3 Productividad por líneas de pedido</h3>
+<p>Un pedido puede tener una línea o muchas, así que contar solo pedidos distorsiona comparaciones entre equipos con pedidos de distinta complejidad. Una <b>línea</b> es una referencia solicitada en una cantidad determinada.</p>
+<p><span class="f">Productividad por líneas = Líneas preparadas / Horas-hombre</span> · 1.200 líneas con 40 HH = <b>30 líneas/HH</b>.</p>
+<p>Una línea de una unidad pequeña no exige el mismo esfuerzo que una línea de un pallet completo; en operaciones heterogéneas conviene segmentar o usar unidades equivalentes justificadas.</p>
+
+<h3>6.4 Productividad y utilización de equipos</h3>
+<p><span class="f">Productividad del equipo = Movimientos realizados / Horas efectivas de operación</span> · 240 movimientos en 12 h = <b>20 movimientos/h</b>. Defina qué es un movimiento válido y cómo se tratan los movimientos en vacío y las esperas. Una productividad alta no es buena si se logra con prácticas inseguras, sobrecarga del equipo o daño a la mercancía.</p>
+<p><span class="f">Utilización del equipo (%) = Tiempo efectivo de utilización / Tiempo disponible definido × 100</span> · 6 h de 8 h = <b>75 %</b>. El 25 % restante no es necesariamente improductivo: puede incluir inspecciones, mantenimiento preventivo, recarga o disponibilidad para responder a la demanda. Distinga: tiempo programado, disponible, operativo, detenido por fallas, de mantenimiento, de espera por falta de trabajo y perdido por congestión o mala coordinación. Así se sabe si la baja utilización es exceso de capacidad, fallas, falta de demanda o programación deficiente.</p>
+
+<h3>6.5 Productividad del espacio</h3>
+<p><span class="f">Densidad de almacenamiento = Unidades de almacenamiento ocupadas / Superficie útil definida</span> · 800 posiciones en 1.000 m² = <b>0,8 posiciones/m²</b>. Depende de la configuración física y del método de almacenamiento. No se confunde con volumen procesado por m² ni con rotación: una bodega densa puede tener recorridos excesivos y alistamiento lento. La ocupación debe conservar espacio para circulación, seguridad, inspección, maniobra y acceso; maximizarla sin estas condiciones perjudica la operación.</p>
+
+<h3>6.6 Productividad del transporte</h3>
+<p>Indicadores posibles: toneladas por vehículo y día, entregas por ruta, kilómetros por entrega, toneladas-kilómetro por vehículo, porcentaje de capacidad utilizada. Ejemplo de utilización por peso: <span class="f">18 t / 24 t × 100 = 75 %</span>. No significa 75 % en todas las dimensiones: la carga puede agotar el volumen antes que el peso máximo, o haber restricciones de distribución de peso. La capacidad se evalúa según las restricciones reales del vehículo, la carga y la operación.</p>
+
+<h3>6.7 Productividad y seguridad laboral</h3>
+<p>Una productividad sostenible mejora resultados sin generar condiciones inseguras ni dañar la salud. Considere ergonomía de las tareas, distribución equilibrada de cargas de trabajo, disponibilidad y mantenimiento de equipos, pausas y descansos aplicables, capacitación, condiciones ambientales (el calor y la humedad de Urabá cuentan), prevención de movimientos repetitivos y sobreesfuerzos, y cumplimiento de procedimientos de seguridad. Si aumentan los pedidos por hora pero también los incidentes, los errores y las ausencias, la mejora aparente no es sostenible. La productividad no justifica ritmos incompatibles con la seguridad.</p>
+<details class="fq"><summary>Comprueba: la productividad subió 12 % y las ausencias por lesiones también. ¿Se mantiene la meta?</summary>No sin revisar. La mejora puede estar apoyada en un ritmo insostenible. Hay que analizar ergonomía, cargas y pausas, y evaluar productividad, calidad y seguridad como un conjunto.</details>
+
+<h3>6.8 Caso resuelto: dos semanas de preparación</h3>
+<table class="t"><tr><th>Variable</th><th>Semana 1</th><th>Semana 2</th></tr>
+<tr><td>Pedidos preparados</td><td>2.400</td><td>2.700</td></tr><tr><td>Trabajadores × horas</td><td>10 × 40</td><td>10 × 40</td></tr><tr><td>Pedidos con errores</td><td>48</td><td>81</td></tr></table>
+<p>HH = 10 × 40 = 400 en ambas. Productividad: semana 1 = 2.400/400 = <b>6</b>; semana 2 = 2.700/400 = <b>6,75</b> pedidos/HH, un aumento de <span class="f">(6,75 − 6)/6 × 100 = 12,5 %</span>. Errores: semana 1 = 48/2.400 = 2 %; semana 2 = 81/2.700 = <b>3 %</b>.</p>
+<p><b>Interpretación:</b> subió la productividad, pero también la tasa de errores; la mejora no es integral. La decisión no es volver al 6 por reflejo, sino investigar si los errores vienen de cambios de procedimiento, presión por cumplir objetivos, fallas de verificación, distribución del trabajo o complejidad de los pedidos, y conservar el rendimiento sin deteriorar la calidad.</p>
+
+<h3>6.9 Errores frecuentes</h3>
+<table class="t"><tr><th>Error</th><th>Consecuencia</th><th>Prevención</th></tr>
+<tr><td>Medir solo pedidos por trabajador</td><td>Se ignoran jornadas y complejidad</td><td>Usar horas-hombre y segmentar</td></tr>
+<tr><td>Todo tiempo sin movimiento es improductivo</td><td>Se penalizan tareas de seguridad y mantenimiento</td><td>Clasificar los tiempos detenidos por causa</td></tr>
+<tr><td>Maximizar la utilización de equipos</td><td>Se pierde capacidad de respuesta</td><td>Definir niveles adecuados de utilización</td></tr>
+<tr><td>Comparar equipos distintos con el mismo estándar</td><td>Conclusiones injustificadas</td><td>Considerar capacidad, tecnología y condiciones</td></tr>
+<tr><td>Aumentar velocidad sin controlar calidad</td><td>Más errores, daños y reprocesos</td><td>Evaluar productividad, calidad y seguridad juntas</td></tr>
+<tr><td>Productividad como única medida individual</td><td>Se ignoran factores del proceso</td><td>Evaluar el sistema de trabajo y resultados equilibrados</td></tr></table>
+
+<h3>6.10 Actividad de aplicación</h3>
+<p>Un equipo de 6 trabajadores prepara 1.800 pedidos en una semana, con 35 horas efectivas cada uno; hay 36 pedidos con errores. Calcule HH, productividad, tasa de errores; interprete productividad y calidad juntas; proponga dos acciones que no comprometan la seguridad.</p>
+<details class="fq"><summary>Ver solución orientativa</summary>HH = 6 × 35 = 210. Productividad = 1.800/210 ≈ 8,57 pedidos/HH. Errores = 36/1.800 = 2 %. Evalúe si el rendimiento y los errores son aceptables frente al estándar. Acciones: reorganizar ubicaciones según la frecuencia de alistamiento y mejorar la verificación de referencias.</details>
+
+<h3>6.11 Síntesis y glosario</h3>
+<p>Debes poder calcular productividad laboral, de equipos y de utilización, distinguir productividad, eficiencia y eficacia, reconocer las limitaciones de los promedios y proponer mejoras que no deterioren calidad, seguridad ni condiciones de trabajo.</p>
+<p><b>Hora-hombre:</b> una hora de trabajo de una persona. <b>Línea de pedido:</b> referencia solicitada con cantidad. <b>Utilización:</b> tiempo efectivo sobre tiempo disponible. <b>Densidad de almacenamiento:</b> posiciones ocupadas por m². <b>Capacidad operativa:</b> capacidad realmente utilizable.</p>
+<p class="ref"><b>Lectura sugerida:</b> Frazelle, <i>World-Class Warehousing and Material Handling</i>; de Koster, Le-Duc y Roodbergen (2007), «Design and control of warehouse order picking: A literature review», <i>European Journal of Operational Research</i>, sobre preparación de pedidos. <b>Aclaración:</b> las fórmulas y reglas de esta unidad son <b>herramientas de gestión y síntesis pedagógica</b>, no citas textuales; en la práctica cada empresa fija su estándar. Verifica fuentes antes de citarlas.</p>`,
+q:[
+["Un equipo prepara 360 pedidos con 5 trabajadores durante 6 horas efectivas. ¿Productividad?",["12 pedidos por hora-hombre","60 pedidos por hora-hombre","72 pedidos por hora-hombre","6 pedidos por hora-hombre"],0,"HH = 30; 360/30 = 12."],
+["Un equipo de 6 trabajadores con 35 horas efectivas cada uno prepara 1.800 pedidos. ¿Productividad aproximada?",["8,57 pedidos/HH","10 pedidos/HH","6 pedidos/HH","12,5 pedidos/HH"],0,"HH = 210; 1.800/210 ≈ 8,57."],
+["La productividad sube 15 % pero aumentan los daños. ¿Qué corresponde?",["Evaluar el desempeño conjunto y analizar las causas","Aceptar los daños como costo de la mejora","Eliminar el registro de daños","Medir solo volumen"],0,"La productividad se interpreta junto con calidad y seguridad."],
+["Un equipo está disponible 8 h y se utiliza 6 h. ¿Utilización y lectura correcta?",["75 %; el resto no es necesariamente improductivo","75 %; el resto es tiempo perdido","25 %; es la productividad","125 %"],0,"Puede incluir mantenimiento, inspección o disponibilidad."],
+["¿Por qué una utilización del 100 % no siempre es deseable?",["Elimina capacidad para mantenimiento, variaciones de demanda y contingencias","Porque los equipos no deben usarse","Porque más del 50 % es ineficiente","Porque no puede medirse"],0,"Se requiere capacidad para continuidad y seguridad."],
+["Semana 1: 6 pedidos/HH y 2 % de errores. Semana 2: 6,75 pedidos/HH y 3 % de errores. ¿Conclusión?",["Subió la productividad pero la mejora no es integral por el aumento de errores","Mejoró todo","Empeoró todo","No se puede calcular"],0,"+12,5 % de productividad con deterioro de calidad exige investigar causas."],
+["¿Por qué puede ser mejor medir líneas que pedidos?",["Porque los pedidos varían en complejidad","Porque las líneas son siempre iguales","Porque los pedidos no se pueden contar","Porque elimina la necesidad de horas-hombre"],0,"Contar solo pedidos distorsiona entre equipos con pedidos de distinta complejidad."],
+["Un vehículo lleva 18 t y su capacidad operativa es 24 t. ¿Qué indica el 75 %?",["Utilización por peso; no necesariamente en volumen","Que el vehículo está ocupado al 75 % en todo sentido","Que sobran 6 vehículos","La rentabilidad"],0,"La carga puede agotar el volumen antes que el peso."]
+]};
+
+EXT[7]={h:`<h2>Unidad 7. Indicadores de entrega perfecta: OTIF y excelencia logística</h2>
+<p><b>Objetivo:</b> integrar tiempo y calidad en el indicador definitivo del cliente (On-Time In-Full), calcularlo correctamente y entender su impacto en la relación comercial.</p>
+
+<h3>7.1 Introducción: qué es una entrega perfecta</h3>
+<p>Es la que satisface simultáneamente los requisitos de tiempo, cantidad, exactitud, integridad física y documentación definidos para el pedido. No basta con mover la mercancía: hay que cumplir lo prometido en las condiciones acordadas. En la práctica conviven indicadores con alcances distintos, y cada empresa debe documentar el suyo; no existe una ficha técnica universal obligatoria.</p>
+<table class="t"><tr><th>Indicador</th><th>Evalúa</th><th>No garantiza por sí solo</th></tr>
+<tr><td>OTD</td><td>Cumplimiento del plazo</td><td>Pedido completo o sin daños</td></tr>
+<tr><td>In-Full</td><td>Entrega de la totalidad requerida</td><td>Entrega a tiempo</td></tr>
+<tr><td>OTIF</td><td>Plazo y completitud simultáneos</td><td>Documentación correcta o ausencia de daños, salvo que se incorporen</td></tr>
+<tr><td>Pedido Perfecto</td><td>Todos los requisitos incluidos en su definición</td><td>Los criterios que la ficha técnica no incluya</td></tr></table>
+
+<h3>7.2 Qué es OTIF y cómo se calcula</h3>
+<p><b>OTIF</b> (On-Time In-Full) mide la proporción de pedidos que se entregan dentro del plazo acordado <b>y</b> con la totalidad de lo requerido según las reglas definidas. Uno puntual con faltantes no cumple; uno completo pero tardío tampoco.</p>
+<p><span class="f">OTIF (%) = Pedidos entregados a tiempo y completos / Total de pedidos evaluables × 100</span></p>
+<p>El numerador incluye solo pedidos que cumplen ambas condiciones; el denominador debe definirse con reglas de inclusión y exclusión documentadas.</p>
+<p><b>Ejemplo:</b> 200 pedidos; 180 a tiempo, 188 completos y 174 ambas cosas. OTD = <b>90 %</b>; In-Full = <b>94 %</b>; OTIF = 174/200 = <b>87 %</b>. El OTIF es menor que ambos porque el pedido debe cumplir las dos condiciones a la vez.</p>
+<details class="fq"><summary>Comprueba: ¿puede el OTIF ser mayor que el OTD?</summary>No. Los pedidos OTIF son un subconjunto de los entregados a tiempo; el OTIF nunca supera al OTD ni al In-Full.</details>
+
+<h3>7.3 Por qué no se multiplican OTD e In-Full</h3>
+<p>Multiplicar 0,90 × 0,94 da 84,6 %, pero el OTIF observado es 87 %. El producto solo equivale al resultado conjunto bajo independencia estadística entre puntualidad y completitud. En una operación real están relacionadas: la falta de inventario puede causar retrasos y faltantes a la vez, y un pedido puede retrasarse precisamente por esperar a completar unidades. <b>Regla:</b> con registros individuales, el OTIF se calcula contando directamente los pedidos que cumplieron ambas condiciones; no se estima por multiplicación sin justificar el supuesto.</p>
+
+<h3>7.4 La unidad de medición: pedido, envío o línea</h3>
+<p><b>Por pedido:</b> cumple solo si satisface el conjunto de líneas y cantidades; si de diez referencias falta una, no es completo. <b>Por envío:</b> un pedido puede dividirse en varios envíos y el resultado cambia; un pedido de 100 unidades en dos envíos de 50, uno con producto equivocado, dará resultados distintos según se mida el despacho o la obligación comercial completa. <b>Por línea:</b> identifica qué referencias generan faltantes, pero no equivale al OTIF por pedido; debe nombrarse y documentarse como líneas cumplidas. No se comparan OTIF por pedido con OTIF por envío.</p>
+<p><b>Entregas parciales y cambios de fecha:</b> si el pedido exige toda la cantidad en una fecha, entregar una parte a tiempo no cumple OTIF. Se puede crear un indicador adicional de entregas parciales autorizadas, sin confundirlo con el OTIF del pedido completo. Documente los cambios de fecha solicitados por el cliente y las condiciones de una nueva promesa válida, para que el indicador no mejore artificialmente.</p>
+
+<h3>7.5 Caso resuelto: OTIF y Pedido Perfecto en Distribuciones del Urabá</h3>
+<table class="t"><tr><th>Condición (500 pedidos)</th><th>Pedidos</th><th>Indicador</th></tr>
+<tr><td>A tiempo</td><td>470</td><td>OTD = 94 %</td></tr><tr><td>Completos</td><td>460</td><td>In-Full = 92 %</td></tr>
+<tr><td>A tiempo y completos</td><td>440</td><td>OTIF = 88 %</td></tr>
+<tr><td>OTIF + documentación correcta</td><td>425</td><td>85 %</td></tr>
+<tr><td>Además sin daños</td><td>415</td><td>Pedido Perfecto = 83 %</td></tr></table>
+<p>Definición usada: Pedido Perfecto = puntualidad + completitud + documentación correcta + ausencia de daños. Si se agregan criterios (exactitud de referencias, temperatura), la ficha debe actualizarse y se pierde comparabilidad histórica.</p>
+<p><b>Brecha:</b> 500 − 440 = <b>60 pedidos incumplidos</b>. Se clasifican en tardíos pero completos, puntuales pero incompletos, y tardíos e incompletos. Un pedido tardío e incompleto pertenece a dos categorías, pero es un solo pedido incumplido; sumar las categorías sin cuidado duplica casos.</p>
+
+<h3>7.6 Impacto en la relación con los clientes</h3>
+<p>Un cliente que recibe completo y a tiempo planifica mejor sus inventarios y ventas; uno que recibe tarde o incompleto puede hacer compras de emergencia, reorganizar actividades y atender reclamaciones de sus propios clientes. Consecuencias posibles: más reclamaciones, costos de coordinación, reposiciones urgentes, pérdida de confianza y riesgo de perder oportunidades. Sin embargo, <b>ningún porcentaje de OTIF garantiza una tasa de retención</b>: influyen también precio, calidad del producto, competencia y relación comercial. Se analiza junto con información comercial y de satisfacción.</p>
+
+<h3>7.7 Cómo mejorar el OTIF</h3>
+<table class="t"><tr><th>Si predominan</th><th>Revisar</th></tr>
+<tr><td>Retrasos</td><td>Liberación de pedidos, vehículos, programación de rutas, congestión y accesos, espera para despacho, direcciones, realismo de las promesas</td></tr>
+<tr><td>Faltantes</td><td>Exactitud del inventario, disponibilidad, reposición, pronósticos, errores de preparación, asignación de inventario, sustitutos autorizados</td></tr>
+<tr><td>Ambos</td><td>Una causa común: la baja disponibilidad puede detener el pedido y luego entregarlo tarde o incompleto</td></tr></table>
+<p>Empiece con datos desagregados por causa, producto, ruta, cliente, centro de distribución y período, siempre que haya información suficiente para comparar válidamente.</p>
+
+<h3>7.8 Errores frecuentes</h3>
+<table class="t"><tr><th>Error</th><th>Consecuencia</th><th>Prevención</th></tr>
+<tr><td>OTIF con todos los pedidos completos, aunque tardíos</td><td>Sobrestima el cumplimiento</td><td>Exigir tiempo y completitud simultáneos</td></tr>
+<tr><td>Multiplicar OTD por In-Full</td><td>Estimación incorrecta</td><td>Calcular con registros individuales</td></tr>
+<tr><td>Cambiar fechas prometidas después del incumplimiento</td><td>Oculta retrasos</td><td>Controlar modificaciones de compromisos</td></tr>
+<tr><td>Contar cada error como un pedido distinto</td><td>Sobrestima pedidos incumplidos</td><td>Contar pedidos únicos y clasificar causas aparte</td></tr>
+<tr><td>Confundir OTIF con Pedido Perfecto</td><td>Se ignoran criterios de calidad</td><td>Definir los componentes de cada indicador</td></tr>
+<tr><td>Comparar OTIF por pedido con por envío</td><td>Unidades de medición distintas</td><td>Homologar alcance y denominador</td></tr></table>
+
+<h3>7.9 Actividad de aplicación</h3>
+<p>800 pedidos del mes: 760 a tiempo; 744 completos; 720 a tiempo y completos; 700 con además documentación correcta; 690 con además sin daños. Calcule OTD, In-Full, OTIF, OTIF con documentación, Pedido Perfecto (cuatro criterios) y los pedidos que incumplieron OTIF; proponga dos acciones.</p>
+<details class="fq"><summary>Ver solución orientativa</summary>OTD = 95 %; In-Full = 93 %; OTIF = 90 %; OTIF con documentación = 87,5 %; Pedido Perfecto = 86,25 %; incumplieron OTIF 80 pedidos. Acciones: mejorar disponibilidad de inventario, analizar los retrasos de transporte y reforzar controles de preparación y documentación, priorizando según causas verificadas.</details>
+
+<h3>7.10 Integración final del módulo</h3>
+<p>Las siete unidades forman un solo sistema: costo, tiempo, calidad, productividad y cumplimiento se leen juntos. Una empresa puede tener costos bajos con inventarios inexactos, ciclos largos y un OTIF deficiente; otra puede lograr servicio alto usando demasiados recursos o inventario innecesario.</p>
+<p><b>Caso integrador.</b> Resultados de Distribuciones del Urabá frente a metas ilustrativas:</p>
+<table class="t"><tr><th>Indicador</th><th>Resultado</th><th>Meta</th><th>Brecha</th></tr>
+<tr><td>CLV</td><td>11 %</td><td>≤ 10 %</td><td>+1 punto</td></tr><tr><td>Costo por pedido</td><td>$18.000</td><td>≤ $16.000</td><td>+$2.000</td></tr>
+<tr><td>OTD</td><td>94 %</td><td>≥ 98 %</td><td>−4 puntos</td></tr><tr><td>Exactitud por referencias</td><td>96 %</td><td>≥ 99 %</td><td>−3 puntos</td></tr>
+<tr><td>Productividad</td><td>25 ped/HH</td><td>≥ 28</td><td>−3</td></tr><tr><td>OTIF</td><td>88 %</td><td>≥ 97 %</td><td>−9 puntos</td></tr></table>
+<p>Las brechas muestran dónde hay desviación, no sus causas. Pasos: (1) identificar brechas; (2) estudiar relaciones entre indicadores: ¿las diferencias de inventario generan pedidos incompletos?, ¿la baja productividad alarga la preparación?, ¿los retrasos de despacho explican el OTD? Sin evidencia no se asume una causa común; (3) priorizar: una primera línea razonable es el OTIF, porque integra tiempo y completitud, separando incumplimientos por retraso de los de faltantes y cruzándolos con inventario, productividad y tiempo; (4) formular acciones con su indicador de seguimiento (por ejemplo, mejores controles de conteo con exactitud por referencias; rediseño de ubicaciones con pedidos/HH y tasa de errores; ajuste de programación con OTD y Lead Time); (5) verificar con las mismas definiciones y reglas, documentando cualquier cambio metodológico. Una mejora se considera demostrada cuando cambia favorablemente frente a la línea base sin deterioros inaceptables en otras dimensiones.</p>
+<p><b>Actividad final empresarial.</b> Elija una empresa real o simulada (con datos identificados como simulados y coherentes) y entregue: descripción de procesos; clasificación de costos logísticos; matriz con fórmulas, fuentes, metas y responsables; al menos un indicador financiero, uno de tiempo, uno de calidad y uno de productividad; OTD y OTIF si hay datos; brechas; causas diferenciando hechos comprobados de hipótesis; acciones correctivas; indicadores para verificar mejoras; conclusiones sustentadas.</p>
+<table class="t"><tr><th>Criterio de evaluación sugerido</th><th>Peso</th></tr>
+<tr><td>Clasificación financiera</td><td>15 %</td></tr><tr><td>Matriz y fichas técnicas</td><td>15 %</td></tr><tr><td>Exactitud de cálculos</td><td>20 %</td></tr><tr><td>Interpretación de indicadores</td><td>20 %</td></tr><tr><td>Análisis de causas y mejoras</td><td>20 %</td></tr><tr><td>Presentación y trazabilidad de datos</td><td>10 %</td></tr></table>
+
+<h3>7.11 Síntesis y glosario</h3>
+<p>Debes poder calcular e interpretar OTD, In-Full, OTIF y Pedido Perfecto, distinguir sus requisitos, definir la unidad de medición, registrar causas de incumplimiento y analizar el efecto de las mejoras sobre calidad, costos y relación con clientes.</p>
+<p><b>OTIF:</b> entrega a tiempo y completa. <b>In-Full:</b> entrega de la totalidad requerida. <b>Entrega parcial:</b> parte de un pedido despachada por separado. <b>Línea base:</b> valor inicial de comparación.</p>
+<p class="ref"><b>Lectura sugerida:</b> modelo SCOR (ASCM), métrica <i>Perfect Order Fulfillment</i>; Chopra y Meindl, <i>Administración de la cadena de suministro</i>. <b>Aclaración:</b> las definiciones de OTD, In-Full, OTIF y Pedido Perfecto aquí son una <b>síntesis pedagógica</b>; cada empresa y cada contrato con clientes puede definirlos distinto, y la afirmación de que el producto OTD × In-Full solo vale bajo independencia es un principio estadístico, no una cita. Verifica fuentes antes de citarlas.</p>`,
+q:[
+["Un pedido completo llega un día después de la fecha prometida. ¿Cumple OTIF?",["No, incumplió el requisito de tiempo","Sí, porque está completo","Sí, si la documentación es correcta","Sí, si el cliente no reclama"],0,"OTIF exige tiempo y completitud simultáneos."],
+["De 200 pedidos, 174 fueron a tiempo y completos. ¿OTIF?",["87 %","90 %","94 %","174 %"],0,"174/200 × 100 = 87 %."],
+["OTD 96 % e In-Full 98 %. ¿Puede afirmarse automáticamente un OTIF de 94,08 %?",["No, debe calcularse con registros individuales o justificar el supuesto","Sí, la multiplicación es obligatoria","Sí, si hay más de 100 pedidos","No, el OTIF no se expresa en porcentaje"],0,"El producto solo vale bajo independencia estadística."],
+["¿Qué diferencia al Pedido Perfecto del OTIF?",["Puede incorporar criterios adicionales a puntualidad y completitud","Mide solo costo de transporte","Siempre dan el mismo resultado","No requiere definición técnica"],0,"Su alcance depende de la ficha técnica."],
+["De 500 pedidos, 440 cumplen OTIF. ¿Cuántos pedidos incumplieron?",["60","440","94","12"],0,"500 − 440 = 60; un pedido tardío e incompleto cuenta una vez."],
+["¿Puede el OTIF superar al OTD?",["No, es un subconjunto de los pedidos a tiempo","Sí, siempre","Solo con entregas parciales","Depende del cliente"],0,"Los pedidos OTIF son un subconjunto de los entregados a tiempo."],
+["Un OTIF de 97 %, ¿garantiza la retención de clientes?",["No, influyen también precio, calidad, competencia y relación comercial","Sí, siempre","Sí, si supera 95 %","No, el OTIF no afecta al cliente"],0,"Es una variable relevante, pero no garantiza una tasa de retención."],
+["Predominan los faltantes en los incumplimientos. ¿Qué conviene revisar primero?",["Exactitud del inventario, disponibilidad y políticas de reposición","Rutas y congestión vial","Solo la documentación","El precio de venta"],0,"Los faltantes apuntan a inventario, reposición y preparación."]
+]};
+
+</script>
+<script>
+// ===== CONFIGURACIÓN =====
+const PASS=3.5,LIM=3; // nota mínima por unidad; umbral de aviso para revisión docente
+const SHEETS_URL="https://docs.google.com/spreadsheets/d/1JTo9V0ZwvKPlrd73Ruo59vGwQW0uCKCvHvQh1mbeSmU/edit?usp=sharing"
+const KEY="lms_indic_v1";
+
+// ===== CONTENIDO =====
+const U=[
+{t:"Clasificación financiera",h:`<h2>Unidad 1. Clasificación de los indicadores a partir de los estados contables</h2>
+<p>Un <b>indicador</b> es una medida calculada que se compara con una meta, un período anterior o un referente. Un dato aislado (gastamos $80 millones en transporte) solo describe; el indicador (8 % de las ventas) permite evaluar.</p>
+<h3>Conceptos clave</h3><ul><li><b>Costo logístico:</b> recursos consumidos en transporte, almacenamiento, inventarios, preparación, devoluciones y gestión, según el alcance definido.</li><li><b>Gasto general:</b> recurso que no corresponde exclusivamente a la logística (publicidad, honorarios jurídicos corporativos).</li><li><b>Desembolso</b> (salida de dinero) e <b>inversión</b> (compra de activos) no son lo mismo que costo del período: un montacargas de $120 millones no es costo de un solo mes.</li></ul>
+<h3>Clasificaciones</h3><p>Por proceso, por trazabilidad (directo/indirecto), por comportamiento (fijo, variable, mixto) y por controlabilidad. Fijo no equivale a no controlable.</p>
+<h3>Procedimiento</h3><p>Definir alcance → fijar período → extraer auxiliares contables → asignar a procesos → separar directos e indirectos (con inductores como m², horas o pedidos) → evitar doble contabilización → conciliar → documentar la ficha técnica.</p>
+<h3>Fórmula</h3><p><span class="f">CLV (%) = Costos logísticos / Ventas netas × 100</span></p>
+<div class="ex"><b>Caso resuelto · Distribuciones del Urabá S. A. S.</b><br>Ventas $1.000 M. Logísticos: transporte 65 + personal CD 30 + bodega 15 + empaque 8 = <b>$118 M</b>. Se excluyen publicidad, honorarios y administración general.<br>CLV = 118 / 1.000 × 100 = <b>11,8 %</b>: por cada $100 vendidos hay $11,80 de costo logístico identificado. No prueba por sí solo eficiencia: falta compararlo con períodos y referentes.</div>
+<p><b>Utilidad atribuible a la logística:</b> no es una partida contable normalizada; es una medida de gestión que exige definir qué ingresos y costos se atribuyen. Ejemplo: ahorro de rutas $12 M − costo adicional $3 M = beneficio neto $9 M.</p>
+<h3>Errores frecuentes</h3><p>Creer que todo gasto es logístico; contar solo transporte; sumar una factura dos veces; comparar costos de un período con ventas de otro; repartir indirectos por partes iguales; asumir que menor costo siempre es mejor.</p>`,
+q:[["Una factura de transporte ya incluida en el costo de adquisición se suma otra vez en el reporte logístico. ¿Cuál es el riesgo?",["Duplicar costos y sobrestimar el indicador","Subestimar las ventas netas","Reducir el tiempo de entrega","Aumentar la utilidad operacional"],0,"La doble contabilización distorsiona el indicador."],
+["Ventas $750 M; transporte $42 M, bodega $18 M, empaque $6 M, publicidad $9 M. ¿Cuál es el CLV?",["8,8 %","10 %","11,2 %","14,4 %"],0,"(42+18+6)/750 = 8,8 %. La publicidad se excluye."],
+["Una bodega compartida se reparte solo por ventas de cada línea. ¿Qué se debe verificar?",["Que la base refleje el consumo de recursos de cada línea","Que todas las líneas tengan el mismo precio","Que se reparta por partes iguales","Que se registre como gasto administrativo"],0,"El inductor debe guardar relación con la causa del costo."],
+["El CLV baja de 12 % a 10 %. ¿Qué se concluye con solo ese dato?",["La proporción de costos sobre ventas disminuyó","La rentabilidad mejoró necesariamente","El costo absoluto bajó necesariamente","El servicio al cliente mejoró"],0,"Es una relación; el costo absoluto, la rentabilidad y el servicio requieren más información."]]},
+{t:"Matriz de control",h:`<h2>Unidad 2. Matriz logística de indicadores</h2>
+<p>La <b>matriz</b> organiza los KPI por proceso y los conecta con objetivos, metas, responsables, fuentes y acciones. Convierte la medición en decisiones.</p>
+<h3>Lista, ficha y matriz</h3><ul><li><b>Lista:</b> qué se mide.</li><li><b>Ficha técnica:</b> cómo se calcula (fórmula, variables, unidad, fuente, periodicidad).</li><li><b>Matriz:</b> integra metas, resultado, brecha, responsable y acción correctiva.</li></ul>
+<h3>Campos mínimos</h3><p>Proceso, objetivo, indicador, fórmula, unidad, meta, resultado, brecha, frecuencia, fuente, responsable y acción.</p>
+<h3>Construcción</h3><p>Identificar procesos → definir objetivos → elegir indicadores → fichas técnicas → metas → responsables → frecuencia → mecanismo de reacción → validar.</p>
+<div class="ex"><b>Caso resuelto</b><br>OTD real 94 % vs meta 98 %. Brecha = 94 − 98 = <b>−4 puntos porcentuales</b>. Tamaño relativo del incumplimiento = (98−94)/98 × 100 ≈ <b>4,08 %</b>. Son dos medidas distintas.</div>
+<h3>Semaforización y benchmarking</h3><p>Los umbrales se definen por indicador y la lógica se invierte cuando menor es mejor (costo). Un indicador en verde con tendencia negativa justifica actuar. El <b>benchmarking</b> (interno, competitivo o funcional) solo es válido si definiciones, período, unidad y tipo de operación son comparables.</p>
+<h3>Errores frecuentes</h3><p>KPI sin objetivo; cambiar fórmulas sin documentar; comparar operaciones distintas; responsables sin autoridad; usar solo indicadores de costo; semaforizar todo con la misma regla.</p>`,
+q:[["¿Cuál es la diferencia entre ficha técnica y matriz de control?",["La ficha define cómo se mide; la matriz lo relaciona con metas, responsables y acciones","Son documentos idénticos","La matriz reemplaza las fórmulas","La ficha solo contiene resultados financieros"],0,"La ficha estandariza la medición; la matriz la usa para gestionar."],
+["El OTD real es 94 % y la meta 98 %. ¿Cuál es la brecha?",["−4 puntos porcentuales","+4 puntos porcentuales","−6 puntos porcentuales","−94 %"],0,"94 − 98 = −4 puntos porcentuales."],
+["Una empresa compara su costo por pedido con otra de operación muy distinta. ¿Qué debe hacer primero?",["Verificar comparabilidad de operaciones y definiciones","Concluir que la de menor costo es más eficiente","Igualar su meta a la del competidor","Eliminar los costos indirectos"],0,"Sin comparabilidad, el benchmarking genera brechas artificiales."],
+["Un indicador prioritario muestra una desviación significativa. ¿Qué corresponde?",["Investigar la causa, asignar responsable y verificar acciones","Cambiar la fórmula","Esperar al cierre anual","Eliminar el indicador"],0,"El valor de la matriz está en convertir información en decisiones verificables."]]},
+{t:"Financieros y operativos",h:`<h2>Unidad 3. Indicadores financieros y operativos</h2>
+<p>Los financieros muestran cuánto cuesta operar; los operativos, cómo se ejecuta y qué se obtiene con los recursos. Se analizan juntos: reducir vehículos baja costos pero puede generar retrasos y ventas perdidas.</p>
+<h3>Fórmulas</h3><ul><li><span class="f">CLV = Costos logísticos / Ventas netas × 100</span></li><li><span class="f">Costo por pedido = Costos logísticos / Pedidos incluidos</span></li><li><span class="f">Costo por tonelada = Costo de transporte / Toneladas</span></li><li><span class="f">Utilización = Capacidad utilizada / Capacidad disponible × 100</span></li><li><span class="f">Costo anual de mantener inventario = Inventario promedio × Tasa anual</span></li><li><span class="f">Demanda no atendida (%) = Valor no atendido por falta de stock / Demanda potencial definida × 100</span></li></ul>
+<div class="ex"><b>Caso resuelto</b><br>Ventas $900 M; costos logísticos $99 M; 5.500 pedidos; transporte $45 M por 225 t; demanda no atendida $18 M de $450 M.<br>CLV = <b>11 %</b> · Costo por pedido = 99.000.000/5.500 = <b>$18.000</b> · Costo por tonelada = <b>$200.000</b> · Demanda no atendida = <b>4 %</b>.</div>
+<p><b>Cuidados:</b> el costo por pedido es un promedio (un pedido de 1 línea no consume lo mismo que uno de 40); las ventas no concretadas no equivalen a utilidad perdida; una utilización alta puede quitar flexibilidad; el inventario se valora con base consistente (costo, no precio de venta).</p>
+<h3>Errores frecuentes</h3><p>Comparar costos absolutos sin volumen; atribuir toda venta no realizada a logística; mezclar denominadores (pedidos recibidos vs entregados); tomar el 100 % de utilización como meta universal.</p>`,
+q:[["Una empresa tiene $90 M de costos logísticos y procesa 6.000 pedidos. ¿Cuál es el costo por pedido?",["$15.000","$1.500","$54.000","$90.000"],0,"90.000.000 / 6.000 = $15.000."],
+["Inventario promedio de $300 M y tasa anual de mantenimiento del 18 %. ¿Costo anual de mantener?",["$54 M","$18 M","$30 M","$300 M"],0,"300 × 0,18 = $54 M."],
+["Se identifican $20 M de demanda no atendida por falta de stock sobre $500 M de demanda potencial. ¿Qué indicador resulta?",["4 %","20 %","2,5 %","25 %"],0,"20/500 × 100 = 4 %; no equivale a utilidad perdida."],
+["Baja el costo por pedido, pero aumentan las entregas tardías. ¿Cuál es la lectura correcta?",["La reducción de costos debe evaluarse junto con el nivel de servicio","El desempeño mejoró necesariamente","El OTD dejó de ser relevante","El costo por pedido mide la rentabilidad total"],0,"Una mejora financiera aislada no garantiza mejor desempeño integral."]]},
+{t:"Tiempo: Lead Time y OTD",h:`<h2>Unidad 4. Indicadores de tiempo</h2>
+<p>El <b>Lead Time</b> es el tiempo entre dos eventos definidos de un proceso. Siempre debe documentarse el punto de inicio y de fin. Para el pedido al cliente: desde la recepción válida hasta la entrega.</p>
+<h3>Fórmulas</h3><ul><li><span class="f">LT = Tr + Tp + Td + Tt + Te</span> (etapas consecutivas: revisión, preparación, despacho, transporte, entrega).</li><li><span class="f">LT promedio = Σ LTi / n</span>; complementar con mediana y percentil 90.</li><li><span class="f">OTD = Entregas a tiempo / Entregas evaluables × 100</span></li><li><span class="f">Cumplimiento del LT = Pedidos dentro del tiempo objetivo / Pedidos evaluables × 100</span></li></ul>
+<p><b>Procesamiento vs espera:</b> muchas veces el ciclo se alarga por esperas (autorizaciones, programación), no por lentitud del trabajo. Fecha <b>prometida</b> (compromiso con el cliente) ≠ <b>programada</b> (plan interno) ≠ <b>real</b>. El OTD se mide contra la prometida.</p>
+<div class="ex"><b>Caso resuelto</b><br>Validación 1 h + preparación 4 + espera de consolidación 5 + transporte 6 + entrega 2 = <b>18 h</b>. Con despachos más frecuentes la espera baja a 2 h: LT = <b>15 h</b>. Reducción = 3 h = (18−15)/18 = <b>16,67 %</b>. Antes de generalizar, verificar costo de transporte y ocupación de vehículos.</div>
+<p><b>Cuello de botella:</b> etapa que restringe el flujo total; no siempre es la más larga. Se detecta por colas, utilización y pedidos detenidos.</p>
+<h3>Errores frecuentes</h3><p>Medir el LT desde eventos distintos; usar solo promedios; cambiar fechas prometidas retrospectivamente; confundir OTD con OTIF; excluir pedidos tardíos sin regla.</p>`,
+q:[["Un pedido tarda 2 h en validación, 4 en preparación, 3 en espera de despacho y 5 en transporte (consecutivas). ¿LT total?",["14 horas","9 horas","12 horas","15 horas"],0,"2+4+3+5 = 14 h."],
+["Una empresa entrega 940 de 1.000 pedidos dentro del plazo prometido. ¿OTD?",["94 %","6 %","96 %","106 %"],0,"940/1.000 × 100 = 94 %."],
+["¿Por qué el promedio del Lead Time no basta?",["Puede ocultar pedidos excepcionalmente demorados","Porque no se puede calcular","Porque siempre coincide con la mediana","Porque solo mide tiempo administrativo"],0,"Conviene analizar distribución, mediana y percentiles."],
+["¿Contra qué fecha se mide el OTD?",["La fecha prometida al cliente","La fecha programada internamente","La fecha que convenga ajustar después","La fecha de facturación"],0,"La programación interna podría ocultar el incumplimiento del compromiso."]]},
+{t:"Calidad logística",h:`<h2>Unidad 5. Indicadores de calidad logística</h2>
+<p>La calidad es el grado en que procesos y resultados cumplen los requisitos definidos: cantidad correcta, referencia correcta, sin daños, con registros confiables y documentación adecuada.</p>
+<h3>Exactitud del inventario</h3><p>Compara lo registrado con lo físico. Dos métodos que <b>no deben mezclarse</b>:</p><ul><li><span class="f">Por referencias = Referencias sin diferencias / Referencias verificadas × 100</span></li><li><span class="f">Por unidades = (1 − Σ|físico − sistema| / Σ físico) × 100</span></li></ul>
+<div class="ex"><b>Caso resuelto</b><br>5 referencias, 3 coinciden: exactitud por referencias = <b>60 %</b>. Diferencias absolutas = 7 unidades sobre 293 físicas: por unidades = <b>≈ 97,61 %</b>. Cada cifra responde a una pregunta distinta; conviene reportar ambas.</div>
+<h3>Otros indicadores</h3><ul><li><span class="f">Tasa de errores = Pedidos con ≥1 error / Pedidos evaluados × 100</span> (45/1.500 = 3 %; pedidos sin errores = 97 %). Se cuenta el pedido una vez, aunque tenga varios errores.</li><li><span class="f">Devoluciones logísticas = Pedidos devueltos por causa logística / Pedidos entregados × 100</span> (30/1.200 = 2,5 %). No toda devolución es culpa de logística.</li></ul>
+<p><b>Pedido Perfecto:</b> cumple simultáneamente todos los criterios definidos (a tiempo, completo, exacto, sin daños, documentación correcta). Con 1.000 pedidos y 900 que cumplen todo, es <b>90 %</b>, aunque cada criterio individual esté en 95 % o más.</p>
+<p><b>Causas:</b> usar Pareto y diagrama causa-efecto, y comprobar con evidencia, no con suposiciones.</p>`,
+q:[["Se inspeccionan 400 referencias y 372 coinciden exactamente con el sistema. ¿Exactitud por referencias?",["93 %","7 %","96 %","97,5 %"],0,"372/400 × 100 = 93 %."],
+["45 de 1.500 pedidos presentan al menos un error. ¿Tasa de errores?",["3 %","45 %","30 %","0,3 %"],0,"45/1.500 × 100 = 3 %."],
+["Un pedido llega a tiempo pero con una referencia equivocada. ¿Es Pedido Perfecto?",["No, si la exactitud forma parte de los requisitos","Sí, el tiempo es lo único relevante","Sí, si el cliente no reclama","Sí, si la documentación es correcta"],0,"Debe cumplir todos los requisitos definidos a la vez."],
+["30 de 1.200 pedidos entregados se devuelven por causa logística. ¿Tasa?",["2,5 %","3 %","4 %","25 %"],0,"30/1.200 × 100 = 2,5 %."]]},
+{t:"Productividad",h:`<h2>Unidad 6. Indicadores de productividad logística</h2>
+<p>La <b>productividad</b> relaciona resultados con recursos. <b>Eficiencia</b>: uso de recursos frente a un estándar. <b>Eficacia</b>: grado en que se alcanzan los objetivos. Se analizan con calidad, tiempo, seguridad y costo.</p>
+<h3>Fórmulas</h3><ul><li><span class="f">Horas-hombre = Trabajadores × Horas efectivas</span></li><li><span class="f">Productividad laboral = Resultado / Horas-hombre</span> (pedidos, líneas, cajas o toneladas por HH)</li><li><span class="f">Productividad de equipo = Movimientos / Horas efectivas</span></li><li><span class="f">Utilización = Tiempo efectivo / Tiempo disponible × 100</span></li><li><span class="f">Utilización de vehículo = Carga transportada / Capacidad operativa × 100</span></li></ul>
+<div class="ex"><b>Caso resuelto</b><br>Semana 1: 2.400 pedidos, 10 trabajadores × 40 h = 400 HH → <b>6 pedidos/HH</b>, errores 48/2.400 = 2 %.<br>Semana 2: 2.700 pedidos → <b>6,75 pedidos/HH</b> (+12,5 %), errores 81/2.700 = <b>3 %</b>.<br>La productividad subió, pero la calidad empeoró: la mejora no es integral. Se investigan causas y se busca conservar el rendimiento sin deteriorar la calidad.</div>
+<p><b>Cuidados:</b> contar líneas y no solo pedidos cuando la complejidad varía; no tomar todo tiempo detenido como improductivo (mantenimiento, seguridad); una utilización del 100 % elimina capacidad de respuesta; la productividad no justifica ritmos inseguros (ergonomía, pausas, sobreesfuerzos).</p>`,
+q:[["Un equipo prepara 360 pedidos con 5 trabajadores durante 6 horas efectivas. ¿Productividad?",["12 pedidos por hora-hombre","60 pedidos por hora-hombre","72 pedidos por hora-hombre","6 pedidos por hora-hombre"],0,"HH = 30; 360/30 = 12."],
+["La productividad sube 15 % pero aumentan los daños. ¿Qué corresponde?",["Evaluar el desempeño conjunto y analizar causas del deterioro","Aceptar los daños como costo de la mejora","Eliminar el registro de daños","Medir solo volumen"],0,"La productividad se interpreta junto con calidad y seguridad."],
+["¿Por qué una utilización del 100 % no siempre es deseable?",["Elimina capacidad para mantenimiento, variaciones de demanda y contingencias","Porque los equipos no deben usarse","Porque más del 50 % es ineficiente","Porque no puede medirse"],0,"Se requiere capacidad para continuidad y seguridad."],
+["6 trabajadores, 35 horas efectivas cada uno, 1.800 pedidos. ¿Productividad aproximada?",["8,57 pedidos/HH","10 pedidos/HH","6 pedidos/HH","12,5 pedidos/HH"],0,"HH = 210; 1.800/210 ≈ 8,57."]]},
+{t:"OTIF y entrega perfecta",h:`<h2>Unidad 7. Entrega perfecta: OTIF y excelencia logística</h2>
+<p><b>OTIF</b> (On-Time In-Full) mide la proporción de pedidos entregados <b>a tiempo y completos</b> de forma simultánea.</p>
+<ul><li><span class="f">OTD = Entregas a tiempo / Total × 100</span></li><li><span class="f">In-Full = Pedidos completos / Total × 100</span></li><li><span class="f">OTIF = Pedidos a tiempo y completos / Total × 100</span></li><li><b>Pedido Perfecto:</b> OTIF más los criterios adicionales definidos (documentación, ausencia de daños, exactitud).</li></ul>
+<div class="ex"><b>Caso resuelto</b><br>200 pedidos: 180 a tiempo, 188 completos, 174 ambas cosas. OTD = <b>90 %</b>, In-Full = <b>94 %</b>, OTIF = <b>87 %</b>.<br>Multiplicar 0,90 × 0,94 daría 84,6 %, que solo es válido bajo independencia entre ambas condiciones. Con registros individuales, se cuenta directamente.</div>
+<div class="ex"><b>Caso · Distribuciones del Urabá</b><br>500 pedidos: 470 a tiempo, 460 completos, 440 OTIF, 425 OTIF + documentación, 415 además sin daños. OTD 94 %, In-Full 92 %, OTIF 88 %, Pedido Perfecto <b>83 %</b>. Pedidos incumplidos OTIF = 500 − 440 = <b>60</b>; un pedido tardío e incompleto es un solo pedido incumplido.</div>
+<p><b>Unidad de medición:</b> pedido, envío o línea dan resultados distintos; documéntala y no compares unidades diferentes. Las entregas parciales y cambios de fecha requieren reglas explícitas.</p>
+<p><b>Impacto:</b> afecta la confiabilidad y la planificación del cliente, pero ningún porcentaje de OTIF garantiza una tasa de retención: influyen también precio, producto y competencia.</p>
+<p><b>Mejora:</b> si predominan retrasos, revisar liberación, vehículos y rutas; si predominan faltantes, exactitud de inventario, reposición y preparación; si hay ambos, buscar una causa común.</p>`,
+q:[["Un pedido completo llega un día después de la fecha prometida. ¿Cumple OTIF?",["No, incumplió el requisito de tiempo","Sí, porque está completo","Sí, si la documentación es correcta","Sí, si el cliente no reclama"],0,"OTIF exige tiempo y completitud simultáneos."],
+["De 200 pedidos, 174 fueron a tiempo y completos. ¿OTIF?",["87 %","90 %","94 %","174 %"],0,"174/200 × 100 = 87 %."],
+["OTD 96 % e In-Full 98 %. ¿Puede afirmarse automáticamente un OTIF de 94,08 %?",["No, debe calcularse con registros individuales o justificar el supuesto","Sí, la multiplicación es obligatoria","Sí, si hay más de 100 pedidos","No, el OTIF no se expresa en porcentaje"],0,"El producto solo vale bajo independencia estadística."],
+["¿Qué diferencia al Pedido Perfecto del OTIF?",["Puede incorporar criterios adicionales a puntualidad y completitud","Mide únicamente costo de transporte","Siempre da el mismo resultado","No requiere definición técnica"],0,"Su alcance depende de los requisitos definidos en la ficha técnica."]]}
+];
+
+// ===== ESTADO =====
+let S=JSON.parse(localStorage.getItem(KEY)||"null")||{name:"",exits:0,events:[],u:U.map(()=>({best:null,att:[]}))};
+if(!Array.isArray(S.events)) S.events=[];
+if(!Array.isArray(S.u)) S.u=U.map(()=>({best:null,att:[]}));
+S.u=U.map((_,i)=>S.u[i]||({best:null,att:[]}));
+let cur=0,att=null,away=false;
+const $=id=>document.getElementById(id),save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+const passed=i=>S.u[i].best!==null&&S.u[i].best>=PASS,unlocked=i=>i===0||passed(i-1);
+const done=()=>S.u.filter((_,i)=>passed(i)).length;
+const avg=()=>S.u.reduce((a,x)=>a+(x.best||0),0)/U.length;
+const final=()=>Math.max(0,Math.min(5,avg()));
+const f1=n=>n.toFixed(2).replace(".",",");
+
+function head(){const d=done();$("hd").innerHTML=`${S.name?"👤 "+S.name+" · ":""}Progreso ${d}/7 · Incidencias registradas: <b>${S.exits}</b> · ${d===7?"Nota final: <b>"+f1(final())+"</b>":"Nota parcial: "+f1(avg())}`}
+function nav(){$("nv").innerHTML=`<div class="bar" style="margin-bottom:12px"><i style="width:${done()/7*100}%"></i></div>`+
+U.map((u,i)=>`<button class="u ${i===cur?"on":""}" ${unlocked(i)?"":"disabled"} onclick="go(${i})">${unlocked(i)?(passed(i)?"✅":"▶️"):"🔒"} Unidad ${i+1}<small>${u.t}${S.u[i].best!==null?" · mejor "+f1(S.u[i].best):""}</small></button>`).join("")+
+`<button class="u ${cur===7?"on":""}" ${done()===7?"":"disabled"} onclick="go(7)">${done()===7?"🎓":"🔒"} Resultado final</button>`}
+function go(i){cur=i;nav();view()}
+function view(){head();
+ if(cur===7)return finalView();
+ const x=S.u[cur];
+ $("mn").innerHTML=(cur===0&&!S.name?`<div class="ex"><b>Bienvenido.</b> Escribe tu nombre completo para registrar tus resultados:<br><input type="text" id="nm" placeholder="Nombre completo o código académico"> <button class="b" onclick="setName()">Guardar</button><br><small>Cada unidad se aprueba con nota ≥ ${f1(PASS)} sobre 5,0. Los cuestionarios ocultan la lectura y registran las salidas de la página.</small></div>`:"")+
+ (EXT[cur+1]||U[cur]).h+`<hr><p>Intentos: ${x.att.length} · Mejor nota: ${x.best===null?"—":f1(x.best)} ${passed(cur)?'<span class="good">(aprobada)</span>':""}</p><button class="b" onclick="warn(${cur})">${passed(cur)?"Repetir evaluación":"Presentar evaluación de la unidad"}</button>`;
+ scrollTo(0,0)}
+function setName(){const v=$("nm").value.trim();if(v.length<3)return alert("Escribe tu nombre completo.");S.name=v;save();view()}
+
+// ===== EVALUACIÓN =====
+function warn(i){
+ if(!S.name){alert("Primero registra tu nombre en la Unidad 1.");go(0);return}
+ $("ov").style.display="flex";$("box").innerHTML=`<h2>⚠️ Aviso de permanencia durante la evaluación</h2>
+ <p>Durante el cuestionario, la plataforma puede registrar cambios de pestaña, minimización del navegador o pérdida de foco de la ventana.</p>
+ <div class="w"><ul><li>Las salidas detectadas se registran con fecha y hora como <b>incidencias para revisión docente</b>.</li><li>Al llegar a <b>${LIM} incidencias en un mismo intento</b>, el sistema mostrará un aviso. <b>No anulará automáticamente el intento ni descontará puntos.</b></li><li>Una interrupción del navegador no demuestra por sí sola una conducta indebida. El docente revisará las incidencias antes de tomar una decisión académica.</li><li>Durante el intento no tendrás acceso a la lectura.</li></ul></div>
+ <p>Las respuestas correctas se mostrarán al terminar el intento. Para aprobar necesitas nota ≥ ${f1(PASS)} sobre 5,0.</p>
+ <button class="b" onclick="start(${i})">Entiendo y quiero comenzar</button><button class="b g" onclick="closeOv()">Cancelar</button>`}
+function closeOv(){$("ov").style.display="none";$("app").style.display="flex"}
+function shuf(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])}
+function start(i){
+ const qs=shuf((EXT[i+1]||U[i]).q.map(([q,o,c,e])=>({q,e,o:shuf(o.map((t,k)=>({t,ok:k===c})))})));
+ att={i,qs,exits:0,done:false,t0:new Date().toISOString()};away=false;
+ $("app").style.display="none";drawQuiz()}
+function drawQuiz(msg){
+ $("box").innerHTML=`<h2>Evaluación · Unidad ${att.i+1}</h2><p>Incidencias detectadas en este intento: <b class="${att.exits?"bad":""}">${att.exits} / ${LIM}</b></p>${msg?`<div class="w">${msg}</div>`:""}`+
+ att.qs.map((q,n)=>`<div class="q"><b>${n+1}. ${q.q}</b>${q.o.map((o,k)=>`<label class="o"><input type="radio" name="q${n}" value="${k}"> ${o.t}</label>`).join("")}</div>`).join("")+
+ `<button class="b" onclick="submitQ()">Enviar respuestas</button>`}
+function submitQ(){
+ const sel=att.qs.map((q,n)=>{const r=document.querySelector(`input[name=q${n}]:checked`);return r?+r.value:-1});
+ if(sel.includes(-1))return alert("Responde todas las preguntas antes de enviar.");
+ att.done=true;const ok=att.qs.filter((q,n)=>q.o[sel[n]].ok).length,score=ok/att.qs.length*5;
+ record({score,ok,annulled:false});
+ const pass=score>=PASS;
+ $("box").innerHTML=`<h2>Resultado · Unidad ${att.i+1}</h2><p style="font-size:22px"><b class="${pass?"good":"bad"}">${f1(score)} / 5,0</b> · ${ok}/${att.qs.length} correctas · ${pass?"Unidad aprobada":"No alcanzaste la nota mínima ("+f1(PASS)+")"}</p><p>Incidencias detectadas en este intento: ${att.exits}. Quedan para revisión docente; no modifican automáticamente la nota.</p>`+
+ att.qs.map((q,n)=>{const g=q.o[sel[n]].ok;return `<div class="q"><b>${n+1}. ${q.q}</b><br><span class="${g?"good":"bad"}">${g?"Correcta":"Incorrecta"}</span> · Respuesta correcta: ${q.o.find(o=>o.ok).t}<br><small>${q.e}</small></div>`}).join("")+
+ `<button class="b" onclick="after(${pass})">${pass&&att.i<6?"Continuar":"Volver al curso"}</button>`}
+function after(pass){const i=att.i;att=null;closeOv();if(pass&&i<6)cur=i+1;else if(pass&&done()===7)cur=7;nav();view()}
+function record(r){
+ const x=S.u[att.i];
+ x.att.push({n:x.att.length+1,date:new Date().toISOString(),score:r.score,correct:r.ok||0,exits:att.exits,annulled:!!r.annulled,reviewRequired:att.exits>0});
+ if(!r.annulled&&(x.best===null||r.score>x.best))x.best=r.score;
+ save();nav();head();syncReport();
+}
+function exitEv(){
+ if(!att||att.done||away)return;
+ away=true;
+ att.exits++;
+ S.exits++;
+ const event={
+   estudiante:S.name||"Sin identificar",
+   tipo:"salida_detectada",
+   fecha:new Date().toISOString(),
+   unidad:att.i+1,
+   intento:(S.u[att.i]?.att?.length||0)+1,
+   salidasEnIntento:att.exits,
+   umbralAviso:LIM,
+   requiereRevisionDocente:true,
+   detalle:"El navegador informó pérdida de foco o cambio de visibilidad; no constituye prueba concluyente de conducta indebida."
+ };
+ S.events.push(event);
+ save();head();syncEvent(event);
+ if(att.exits>=LIM){
+   drawQuizKeep(`Se han registrado ${att.exits} incidencias en este intento. El intento continúa y no se anula automáticamente. Las incidencias quedan marcadas para revisión del docente.`);
+ } else {
+   drawQuizKeep(`Se registró una incidencia (${att.exits}/${LIM}). Es un aviso para revisión docente; no se descuenta nota ni se anula el intento automáticamente.`);
+ }
+}
+function drawQuizKeep(msg){
+ const m=[...document.querySelectorAll("#box input:checked")].map(e=>e.name+"|"+e.value);
+ drawQuiz(msg);
+ m.forEach(s=>{const[n,v]=s.split("|");const e=document.querySelector(`input[name=${n}][value="${v}"]`);if(e)e.checked=true})
+}
+document.addEventListener("visibilitychange",()=>{document.hidden?exitEv():away=false});
+addEventListener("blur",exitEv);addEventListener("focus",()=>{if(!document.hidden)away=false});
+
+// ===== RESULTADO FINAL, INFORME Y GOOGLE SHEETS =====
+function report(){return{
+ tipo:"reporte",
+ estudiante:S.name,
+ fecha:new Date().toISOString(),
+ salidas_totales:S.exits,
+ incidencias:S.events,
+ promedio_unidades:+avg().toFixed(2),
+ nota_final:+final().toFixed(2),
+ unidades:S.u.map((x,i)=>({unidad:i+1,titulo:U[i].t,mejor_nota:x.best,intentos:x.att}))
+}}
+function postData(payload){
+ if(!SHEETS_URL)return;
+ try{
+   fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),keepalive:true});
+ }catch(e){console.warn("No se pudo enviar el registro a Google Sheets.",e)}
+}
+function syncEvent(event){postData({tipo:"incidencia",estudiante:S.name,evento:event})}
+function syncReport(){postData(report())}
+function dl(){
+ const r=report();
+ let t=`INFORME DE EVALUACIÓN · Indicadores de gestión logística\nEstudiante: ${r.estudiante}\nFecha: ${r.fecha}\n\n`;
+ r.unidades.forEach(u=>{t+=`Unidad ${u.unidad} · ${u.titulo} · mejor nota: ${u.mejor_nota===null?"—":f1(u.mejor_nota)}\n`;u.intentos.forEach(a=>t+=`   Intento ${a.n}: ${f1(a.score)} · incidencias: ${a.exits}${a.annulled?" · ANULADO":""}${a.reviewRequired?" · REVISIÓN DOCENTE":""} · ${a.date}\n`)});
+ t+=`\nPromedio de unidades: ${f1(r.promedio_unidades)}\nIncidencias registradas: ${r.salidas_totales} (sin descuento automático; requieren revisión docente)\nNOTA FINAL: ${f1(r.nota_final)} / 5,0\n`;
+ if(r.incidencias.length){t+="\nDETALLE DE INCIDENCIAS\n";r.incidencias.forEach(e=>t+=`${e.fecha} · Unidad ${e.unidad} · intento ${e.intento} · incidencia ${e.salidasEnIntento} · requiere revisión docente\n`)}
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/plain"}));a.download="informe_"+S.name.replace(/\W+/g,"_")+".txt";a.click()
+}
+function finalView(){head();syncReport();
+ $("mn").innerHTML=`<h2>Resultado final del módulo</h2><p>Estudiante: <b>${S.name}</b></p>
+ <table style="border-collapse:collapse;width:100%">${U.map((u,i)=>`<tr><td style="border:1px solid var(--b);padding:6px">Unidad ${i+1} · ${u.t}</td><td style="border:1px solid var(--b);padding:6px">${f1(S.u[i].best===null?0:S.u[i].best)}</td><td style="border:1px solid var(--b);padding:6px">${S.u[i].att.length} intento(s)</td></tr>`).join("")}</table>
+ <p>Incidencias detectadas: <b>${S.exits}</b>. No generan descuento automático; quedan disponibles para revisión docente.</p>
+ <p style="font-size:28px"><b>Nota final: ${f1(final())} / 5,0</b></p>
+ <button class="b" onclick="dl()">Descargar informe</button>
+ <button class="b g" onclick="if(confirm('Esto borra el progreso guardado en ESTE navegador. Si Google Sheets está conectado, los registros ya enviados permanecerán en la hoja. ¿Continuar?')){localStorage.removeItem(KEY);location.reload()}">Reiniciar curso en este navegador</button>`}
+nav();view();
+</script></body></html>
